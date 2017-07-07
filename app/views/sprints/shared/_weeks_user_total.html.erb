@@ -1,0 +1,76 @@
+<% @sprint.weeks.each do |week| %>
+
+  <tr <%= "class=current_period" if Date.today.between?(week.start_w, week.end_w) %>>
+
+    <td>
+      <%= week.description %>
+    </td>
+
+    <td>
+      <%= l(week.start_w) %>
+    </td>
+
+    <td>
+      <%= l(week.end_w) %>
+    </td>
+
+    <% if @user.present? %>
+
+      <% if week.hours_registries.where(user_id: @user.id, project_id: @project.id).present? %>
+        <% hours_performed = week.hours_registries.where(
+                                user_id: @user.id,
+                                project_id: @project.id
+                              ).first.hours_performed %>
+        <% hours_performed = time_diff(0, hours_performed) %>
+      <% else %>
+        <% hours_performed = '-' %>
+      <% end %>
+
+    <% else %>
+
+      <% if week.hours_registries.where(user_id: @project.team.users.first.id, project_id: @project.id).present? %>
+        <% hours_performed = week.hours_registries.where(
+                                user_id: @project.team.users.first.id,
+                                project_id: @project.id
+                              ).first.hours_performed %>
+        <% hours_performed = time_diff(0, hours_performed) %>
+      <% else %>
+        <% hours_performed = '-' %>
+      <% end %>
+
+    <% end %>
+
+    <td>
+      <%= hours_performed %>
+    </td>
+
+    <td>
+      <%= "#{week.expected_hours}h" %>
+    </td>
+
+    <td width="70" align="center">
+    <% if @user.present? %>
+
+      <%= link_to t('buttons.edit'),
+          edit_week_path(week, project: @project,
+                         hours_registry: week.hours_registries.where(
+                                           user_id: @user.id,
+                                           project_id: @project.id
+                                         ).first,
+                         user_id: @user.id
+                        ) %>
+    <% else %>
+
+      <%= link_to t('buttons.edit'),
+          edit_week_path(week, project: @project,
+                         hours_registry: week.hours_registries.where(
+                                           user_id: @project.team.users.first.id,
+                                           project_id: @project.id
+                                         ).first,
+                         user_id: @project.team.users.first.id
+                        ) %>
+    <% end %>
+    </td>
+  </tr>
+
+<% end %>

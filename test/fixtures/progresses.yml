@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  completeness: MyString
+  advance: MyString
+  macro_activity: one
+
+two:
+  completeness: MyString
+  advance: MyString
+  macro_activity: two

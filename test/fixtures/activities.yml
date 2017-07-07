@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyString
+  pontos_cadastrados: 1
+  status: one
+  label: one
+  sprint: one
+
+two:
+  description: MyString
+  pontos_cadastrados: 1
+  status: two
+  label: two
+  sprint: two

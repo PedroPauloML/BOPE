@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyString
+  inicio: 2017-05-03
+  fim: 2017-05-03
+  pontos_cadastrados: 1
+  pontos_atualizados: 1
+
+two:
+  description: MyString
+  inicio: 2017-05-03
+  fim: 2017-05-03
+  pontos_cadastrados: 1
+  pontos_atualizados: 1

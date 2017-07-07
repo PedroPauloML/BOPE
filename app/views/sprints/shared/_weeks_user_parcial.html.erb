@@ -1,0 +1,67 @@
+<% @sprint.weeks.each do |week| %>
+
+  <tr <%= "class=current_period" if Date.today.between?(week.start_w, week.end_w) %>>
+
+    <td>
+      <%= week.description %>
+    </td>
+
+    <td>
+      <%= l(week.start_w) %>
+    </td>
+
+    <td>
+      <%= l(week.end_w) %>
+    </td>
+
+    <%# VERIFICA SE EXISTE ALGUM REGISTRO DE HORA NA SEMANA CORRENTE %>
+    <% if week.hours_registries.where(user_id: current_user.id, project_id: @project.id).present? %>
+
+      <%# VERIFICA SE O CAMPO DE HORAS REALIZADAS 'NÃO' ESTÁ EM BRANCO %>
+      <% unless week.hours_registries.where(user_id: current_user.id, project_id: @project.id).first.hours_performed.blank? %>
+
+        <%# VERIFICA SE O USUÁRIO ESTÁ LOGADO %>
+        <% unless week.hours_registries.where(user_id: current_user.id, project_id: @project.id).first.start_hr.blank? %>
+
+          <% hours_performed = (Time.zone.now - week.hours_registries.where(
+                                                  user_id: current_user.id,
+                                                  project_id: @project.id
+                                                ).first.start_hr) +
+                                week.hours_registries.where(
+                                  user_id: current_user.id,
+                                  project_id: @project.id
+                                ).first.hours_performed %>
+          <% hours_performed = time_diff(0, hours_performed) %>
+        <% else %>
+          <% hours_performed = week.hours_registries.where(
+                                  user_id: current_user.id,
+                                  project_id: @project.id
+                                ).first.hours_performed %>
+          <% hours_performed = time_diff(0, hours_performed) %>
+        <% end %>
+
+      <% else %>
+        <%# VERIFICA SE O USUÁRIO ESTÁ LOGADO %>
+        <% unless week.hours_registries.where(user_id: current_user.id, project_id: @project.id).first.start_hr.blank? %>
+          <% hours_performed = Time.zone.now - week.hours_registries.where(
+                                                 user_id: current_user.id,
+                                                 project_id: @project.id
+                                               ).first.start_hr %>
+          <% hours_performed = time_diff(0, hours_performed) %>
+        <% end %>
+      <% end %>
+
+    <% else %>
+      <% hours_performed = '-' %>
+    <% end %>
+
+    <td>
+      <%= hours_performed %>
+    </td>
+
+    <td>
+      <%= "#{week.expected_hours}h" %>
+    </td>
+  </tr>
+
+<% end %>
