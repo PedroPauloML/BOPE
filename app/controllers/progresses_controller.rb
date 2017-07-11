@@ -64,14 +64,14 @@ class ProgressesController < ApplicationController
                disposition: "inline",
                template: "reports/pdf.html.erb",
                layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project_id]) },
+               locals: { :@project => Project.find(params[:project]) },
                page_size: 'A4',
-               javascript_delay: 3000
+               encoding: 'utf8'
       end
       format.html do
         render template: "reports/pdf",
                layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project_id]) }
+               locals: { :@project => Project.find(params[:project]) }
        end
     end
   end

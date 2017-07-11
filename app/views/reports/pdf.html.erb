@@ -1,16 +1,39 @@
-<div class="chart">
+<div id="chart"></div>
 
-  <%= line_chart [
-    {name: "Completude",
-     data: @project.progresses
-           .order(:id).map { |p| [[p.sprint.description + " (#{p.sprint.semester})"], p.completeness] }
-    },
-    {name: "Avanço",
-     data: @project.progresses
-           .order(:id).map { |p| [[p.sprint.description + " (#{p.sprint.semester})"], p.advance] }
-    }
-    ], title: "#{@project.description}", xtitle: 'Sprints', ytitle: 'Completude/Avanço (%)' %>
-
-</div>
-
-teste
+<script>
+  window.onload = function() {
+    zingchart.render({
+      id: "chart",
+      data: {
+        "type": "line",
+        "title": {
+          "text": "Gráfico de Avanço e Completude"
+        },
+        "legend": {
+          "layout":"1x2", //row x column
+          "y": "10%",
+          "x": "33%",
+          "padding": "10%"
+        },
+        "plotarea": {
+          "margin-top": "24%"
+        },
+        "plot": {
+          "value-box": {
+            "text": "%node-value"
+          }
+        },
+        "series": [
+          {
+            "values": <%= raw @project.progresses.order(:id).map { |p| [p.sprint.description + " (#{p.sprint.semester})", p.completeness.to_f] } %>,
+            "text": "Completude"
+          },
+          {
+            "values": <%= raw @project.progresses.order(:id).map { |p| [p.sprint.description + " (#{p.sprint.semester})", p.advance.to_f] } %>,
+            "text": "Avanço"
+          }
+        ]
+      }
+    });
+  };
+</script>

@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+# A Ruby client library for Redis
+gem 'redis', '~>3.2'
+
 # PDF generator (from HTML) plugin for Ruby on Rails
 gem 'wicked_pdf'
 # Because wicked_pdf is a wrapper for wkhtmltopdf, you'll need to install that, too.

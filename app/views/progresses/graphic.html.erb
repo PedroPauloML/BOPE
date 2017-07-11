@@ -34,8 +34,9 @@
       <br>
 
       <div class="chart">
+        <div id="chart"></div>
 
-        <%= line_chart [
+        <%#= line_chart [
           {name: "Completude",
            data: @project.progresses
                  .order(:id).map { |p| [[p.sprint.description + " (#{p.sprint.semester})"], p.completeness] }
@@ -44,16 +45,66 @@
            data: @project.progresses
                  .order(:id).map { |p| [[p.sprint.description + " (#{p.sprint.semester})"], p.advance] }
           }
-          ], title: "#{@project.description}", xtitle: 'Sprints', ytitle: 'Completude/Avanço (%)' %>
+          ], title: "#{@project.description}", xtitle: 'Sprints', ytitle: 'Completude/Avanço (%)', download: true %>
 
       </div>
 
       <br>
 
-      <%= link_to "Download PDF", progress_report_pdf_path(project_id: @project, format: "pdf"), target: '_blank', class: 'btn btn-info' %>
-
+      <%= link_to "Download PDF", progress_report_pdf_path(project: @project, format: 'pdf'), class: 'btn btn-info', target: '_blank' %> |
       <%= link_to t('buttons.back'), progresses_path(project: @project), class: "btn btn-success" %>
+
 
     </div>
   </div>
 </div>
+
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+<script>
+  window.onload = function() {
+    zingchart.render({
+      id: "chart",
+      data: {
+        "type": "line",
+        "title": {
+          "text": "Gráfico de Avanço e Completude"
+        },
+        "legend": {
+          "layout":"1x2", //row x column
+          "y": "10%",
+          "x": "33%",
+          "padding": "10%"
+        },
+        "plotarea": {
+          "margin-top": "24%"
+        },
+        "plot": {
+          "value-box": {
+            "text": "%node-value"
+          }
+        },
+        "series": [
+          {
+            "values": <%= raw @project.progresses.order(:id).map { |p| [p.sprint.description + " (#{p.sprint.semester})", p.completeness.to_f] } %>,
+            "text": "Completude"
+          },
+          {
+            "values": <%= raw @project.progresses.order(:id).map { |p| [p.sprint.description + " (#{p.sprint.semester})", p.advance.to_f] } %>,
+            "text": "Avanço"
+          }
+        ]
+      }
+    });
+  };
+</script>
+
+<!-- <script>
+  jQuery(document).ready(function($) {
+    var canvas = $('canvas')[0];
+    var h = $('input#image')[0];
+    h.value = canvas.toDataURL('image/jpg');
+    // var a = $("a[target='_blank'")[0];
+    // a.href += '?image=' + canvas.toDataURL('image/png');
+  });
+</script> -->
