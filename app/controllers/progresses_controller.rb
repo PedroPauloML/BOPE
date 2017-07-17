@@ -82,16 +82,4 @@ class ProgressesController < ApplicationController
     params.require(:progress).permit(:completeness, :advance, :project_id, :sprint_id)
   end
 
-  # def report_pdf_instance
-  #   report = Project.find(params[:project_id])
-  #   ReportPdf.new(report)
-  # end
-
-  # def send_report_pdf
-  #   send_file report_pdf_instance.to_pdf,
-  #     filename: report_pdf_instance.filename,
-  #     type: "application/pdf",
-  #     disposition: "inline"
-  # end
-
 end

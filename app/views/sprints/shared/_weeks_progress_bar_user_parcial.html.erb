@@ -1,0 +1,59 @@
+<% if @sprint.weeks.where('start_w <= ? AND end_w >= ?', Date.today, Date.today).present? %>
+  <% current_week = @sprint.weeks.where('start_w <= ? AND end_w >= ?',
+                                        Date.today, Date.today).first %>
+
+  <%# VERIFICA SE EXISTE ALGUM REGISTRO DE HORA NA SEMANA CORRENTE %>
+  <% if current_week.hours_registries.where(user_id: current_user.id, project_id: @project.id).present? %>
+
+    <%# VERIFICA SE O CAMPO DE HORAS REALIZADAS 'NÃO' ESTÁ EM BRANCO %>
+    <% unless current_week.hours_registries.where(user_id: current_user.id, project_id: @project.id).first.hours_performed.blank? %>
+
+      <%# VERIFICA SE O USUÁRIO ESTÁ LOGADO %>
+      <% unless current_week.hours_registries.where(user_id: current_user.id, project_id: @project.id).first.start_hr.blank? %>
+
+        <% hours_performed = (Time.zone.now - current_week.hours_registries.where(
+                                                user_id: current_user.id,
+                                                project_id: @project.id
+                                              ).first.start_hr) +
+                              current_week.hours_registries.where(
+                                user_id: current_user.id,
+                                project_id: @project.id
+                              ).first.hours_performed %>
+        <% hours_performed_percent = ((hours_performed * 100) /
+                                      (current_week.expected_hours.to_f * 3600)
+                                     ).round(2) %>
+      <% else %>
+        <% hours_performed = current_week.hours_registries.where(
+                                user_id: current_user.id,
+                                project_id: @project.id
+                              ).first.hours_performed %>
+        <% hours_performed_percent = ((hours_performed * 100) /
+                                      (current_week.expected_hours.to_f * 3600)
+                                     ).round(2) %>
+      <% end %>
+
+    <% else %>
+      <%# VERIFICA SE O USUÁRIO ESTÁ LOGADO %>
+      <% unless current_week.hours_registries.where(user_id: current_user.id, project_id: @project.id).first.start_hr.blank? %>
+        <% hours_performed = Time.zone.now - current_week.hours_registries.where(
+                                               user_id: current_user.id,
+                                               project_id: @project.id
+                                             ).first.start_hr %>
+        <% hours_performed_percent = ((hours_performed * 100) /
+                                      (current_week.expected_hours.to_f * 3600)
+                                     ).round(2) %>
+      <% end %>
+    <% end %>
+
+  <% else %>
+    <% hours_performed_percent = 0 %>
+  <% end %>
+
+<% else %>
+  <% hours_performed_percent = 0 %>
+<% end %>
+
+<div class="progress-bar" style="width: <%= hours_performed_percent > 100 ?
+                                            100 : hours_performed_percent %>%">
+  <%= hours_performed_percent > 100 ? ">100%" : "#{hours_performed_percent}%" %>
+</div>

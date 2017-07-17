@@ -26,6 +26,13 @@
     }
 }
 
+.select-user {
+    background-color: #3e3b3b;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: -15px;
+}
+
 .hours-performed {
     background-color: #3e3b3b;
     padding: 10px;
@@ -85,7 +92,7 @@ tr.current_period > td {
     width: 300px !important;
 }
 
-.chart {
+.chart, div#id {
     background-color: white;
     margin: 20px;
     padding: 30px 30px 5px 30px;

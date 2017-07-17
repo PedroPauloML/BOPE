@@ -18,20 +18,6 @@ class SprintsController < ApplicationController
                   .joins({user: :user_profile})
                   .where(project_id: @project.id, sprint_id: @sprint.id)
                   .order("user_profiles.name").page(params[:page]).per(10)
-
-    @hours_performed_percent = 0
-
-    if @sprint.weeks.where('start_w >= ? AND end_w <= ?',
-                           Date.today, Date.today).present?
-      current_week = @sprint.weeks.where('start_w >= ? AND end_w <= ?',
-                                         Date.today, Date.today).first
-      # current_week = @sprint.weeks.last
-      hr = HoursRegistry.where(user_id: current_user.id, project_id: @project.id,
-                               week_id: current_week.id).first
-      @hours_performed_percent = ((hr.hours_performed * 100) /
-                                  (current_week.expected_hours.to_f * 3600)
-                                 ).round(2)
-    end
   end
 
   def new
@@ -123,8 +109,13 @@ class SprintsController < ApplicationController
       if Sprint.where("(inicio <= ? AND fim >= ?)",
                       Date.parse(inicio_params),
                       Date.parse(inicio_params)).exists?
-        @sprint.errors.add(:inicio, "é inválido. Já existe uma Sprint em andamento
-                                     entre esse período de tempo (#{inicio_params}).")
+        sprint = Sprint.where("(inicio <= ? AND fim >= ?)",
+                              Date.parse(inicio_params),
+                              Date.parse(inicio_params)).first
+        unless sprint == @sprint
+          @sprint.errors.add(:inicio, "é inválido. Já existe uma Sprint em andamento
+                                       entre esse período de tempo (#{inicio_params}).")
+        end
       end
 
       if Sprint.where("(inicio >= ? AND fim >= ?) AND
@@ -133,19 +124,32 @@ class SprintsController < ApplicationController
                       Date.parse(inicio_params),
                       Date.parse(fim_params),
                       Date.parse(fim_params)).exists?
-        @sprint.errors.add(:inicio, "é inválido. Já existe uma Sprint em andamento
-                                     entre esse período de tempo (#{inicio_params}).")
+        sprint = Sprint.where("(inicio >= ? AND fim >= ?) AND
+                               (inicio <= ? AND fim <= ?)",
+                              Date.parse(inicio_params),
+                              Date.parse(inicio_params),
+                              Date.parse(fim_params),
+                              Date.parse(fim_params)).first
+        unless sprint == @sprint
+          @sprint.errors.add(:inicio, "é inválido. Já existe uma Sprint em andamento
+                                       entre esse período de tempo (#{inicio_params}).")
+          @sprint.errors.add(:fim, "é inválido. Já existe uma Sprint em andamento
+                                    entre esse período de tempo (#{fim_params}).")
+        end
+      end
+    end
+
+    if Sprint.where("(inicio <= ? AND fim >= ?)",
+                    Date.parse(fim_params),
+                    Date.parse(fim_params)).exists?
+      sprint = Sprint.where("(inicio <= ? AND fim >= ?)",
+                            Date.parse(fim_params),
+                            Date.parse(fim_params)).first
+      unless sprint == @sprint
         @sprint.errors.add(:fim, "é inválido. Já existe uma Sprint em andamento
                                   entre esse período de tempo (#{fim_params}).")
       end
     end
-
-      if Sprint.where("(inicio <= ? AND fim >= ?)",
-                      Date.parse(fim_params),
-                      Date.parse(fim_params)).exists?
-        @sprint.errors.add(:fim, "é inválido. Já existe uma Sprint em andamento
-                                  entre esse período de tempo (#{fim_params}).")
-      end
   end
 
   def create_weeks_dynamically
