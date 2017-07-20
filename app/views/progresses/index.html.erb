@@ -12,12 +12,12 @@
       <ul class="breadcrumb">
         <div class="row">
 
-          <div class="col-lg-6 col-sm-6">
+          <div class="col-lg-6 col-sm-6 col-xs-6">
             <li><%= link_to "Projeto", project_path(@project) %></li>
             <li class="active">Progressos</li>
           </div>
 
-          <div class="col-lg-6 col-sm-6">
+          <div class="col-lg-6 col-sm-6 col-xs-6">
 
             <div class="progress progress-striped active" style="margin-bottom: 0" data-toggle="tooltip" data-placement="bottom" title="Completude do projeto">
               <div class="progress-bar" style="width: <%= @project.progresses.last.completeness %>%">

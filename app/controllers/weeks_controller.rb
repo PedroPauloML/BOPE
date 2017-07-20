@@ -4,7 +4,7 @@ class WeeksController < ApplicationController
     @project = params[:project]
 
     if params[:hours_registry].present?
-      # @hours_registry = HoursRegistry.find(params[:hours_registry])
+      @hours_registry = HoursRegistry.find(params[:hours_registry])
       puts ">>>>>> TRUE <<<<<<"
     else
       @hours_registry = HoursRegistry.new

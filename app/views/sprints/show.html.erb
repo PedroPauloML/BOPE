@@ -12,7 +12,7 @@
       <ul class="breadcrumb">
         <div class="row">
 
-          <div class="col-lg-5 col-sm-5">
+          <div class="col-lg-5 col-sm-5 col-xs-5">
             <li><%= link_to "Projeto", project_path(@project) %></li>
             <li class="active">Sprint</li>
           </div>
@@ -72,31 +72,31 @@
       <div class="row">
         <% if current_user_total? %>
 
-          <div class="col-lg-8 col-sm-6">
+          <div class="col-lg-8 col-sm-6 col-xs-6">
             <span class="title">Semanas para:</span>
           </div>
-          <div class="col-lg-4 col-sm-6">
+          <div class="col-lg-4 col-sm-6 col-xs-6">
             <div class="select-user">
               <% if @user.present? %>
                 <%= select(:weeks, "users_weeks",
-                           @project.team.users.collect {|u| [ u.user_profile.name, u.id ] },
+                           @project.team.users.joins(:user_profile).order('user_profiles.name').collect {|u| [ u.user_profile.name, u.id ] },
                            {selected: @user.id},
                            {class: 'form-control'}) %>
               <% else %>
                 <%= select(:weeks, "users_weeks",
-                           @project.team.users.collect {|u| [ u.user_profile.name, u.id ] },
-                           {},
+                           @project.team.users.joins(:user_profile).order('user_profiles.name').collect {|u| [ u.user_profile.name, u.id ] },
+                           {seleted: @project.team.users.joins(:user_profile).order('user_profiles.name').first.id},
                            {class: 'form-control'}) %>
               <% end %>
             </div>
           </div>
         <% else %>
 
-          <div class="col-lg-6 col-sm-6">
+          <div class="col-lg-6 col-sm-6 col-xs-6">
             <span class="title">Semanas:</span>
           </div>
 
-          <div class="col-lg-6 col-sm-6 pull-right">
+          <div class="col-lg-6 col-sm-6 col-xs-6 pull-right">
             <div class="hours-performed">
 
               <div class="progress progress-striped active" style="margin-bottom: 0" data-toggle="tooltip" data-placement="bottom" title="Horas realizadas na semana corrente">

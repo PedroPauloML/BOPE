@@ -9,6 +9,7 @@
   <%= javascript_include_tag 'application' %>
   <%= javascript_include_tag 'usebootstrap' %>
 
+
   <!-- Fonts -->
   <%#= google_webfonts_link_tag "Droid Sans" => [400,700] %>
 
@@ -35,9 +36,17 @@
 
   </div>
 
-<script>
-    $.notify("<%= notice %>", "success");
-</script>
+  <script>
+      $.notify("<%= notice %>", "success");
+  </script>
+
+  <% if params[:controller].include?("/") %>
+    <% if params[:controller].split("/").first.include?("reports") %>
+      <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <% end %>
+  <% elsif params[:controller].include?("reports") %>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+  <% end %>
 
 </body>
 </html>

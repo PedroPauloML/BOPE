@@ -26,6 +26,14 @@
     }
 }
 
+.centered {
+    display: flex;
+    align-items: center;
+}
+.centered > a {
+    margin: 10px auto 20px auto;
+}
+
 .select-user {
     background-color: #3e3b3b;
     padding: 10px;
@@ -60,7 +68,7 @@ tr.current_period > td {
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     font-style: italic !important;
 }
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+::-moz-placeholder { /* Mozilla Firefox 4 to 18 */
    font-style: italic !important;
    opacity:  1;
 }
@@ -208,4 +216,19 @@ input[readonly]{
 .pagination>.active>a {
     background-color: #2a9fd6 !important;
     border-color: #2a9fd6 !important;
+}
+
+/* REPORTS */
+.img-reports {
+    box-shadow: 0 0 5px black;
+    height: 125px;
+    margin: 30px 15% 0 0;
+    border-radius: 5px;
+    width: 100%;
+    overflow: hidden;
+}
+.img-reports > img {
+    min-height: 100%;
+    height: auto;
+    width: 100%;
 }

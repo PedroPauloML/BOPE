@@ -28,9 +28,9 @@
 
     <% else %>
 
-      <% if week.hours_registries.where(user_id: @project.team.users.first.id, project_id: @project.id).present? %>
+      <% if week.hours_registries.where(user_id: @project.team.users.joins(:user_profile).order('user_profiles.name').first.id, project_id: @project.id).present? %>
         <% hours_performed = week.hours_registries.where(
-                                user_id: @project.team.users.first.id,
+                                user_id: @project.team.users.joins(:user_profile).order('user_profiles.name').first.id,
                                 project_id: @project.id
                               ).first.hours_performed %>
         <% hours_performed = time_diff(0, hours_performed) %>
@@ -64,10 +64,10 @@
       <%= link_to t('buttons.edit'),
           edit_week_path(week, project: @project,
                          hours_registry: week.hours_registries.where(
-                                           user_id: @project.team.users.first.id,
+                                           user_id: @project.team.users.joins(:user_profile).order('user_profiles.name').first.id,
                                            project_id: @project.id
                                          ).first,
-                         user_id: @project.team.users.first.id
+                         user_id: @project.team.users.joins(:user_profile).order('user_profiles.name').first.id
                         ) %>
     <% end %>
     </td>

@@ -323,14 +323,18 @@ end
             hour_start = Time.zone.now
             hour_end = Random.rand((hour_start + 1)..(hour_start + (w.expected_hours).to_i.hour))
 
-            HoursRegistry.create!(
-              start_hr: hour_start,
-              end_hr: hour_end,
-              hours_performed: hour_end - hour_start,
-              week_id: w.id,
-              user_id: u.id,
-              project_id: t.project.id
-              )
+            unless HoursRegistry.where(project_id: t.project.id,
+                                   week_id: w.id,
+                                   user_id: u.id).present?
+              HoursRegistry.create!(
+                start_hr: hour_start,
+                end_hr: hour_end,
+                hours_performed: hour_end - hour_start,
+                week_id: w.id,
+                user_id: u.id,
+                project_id: t.project.id
+                )
+            end
 
           end
         end

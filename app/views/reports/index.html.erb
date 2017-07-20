@@ -1,0 +1,57 @@
+<div class="col-lg-9">
+  <div class="panel">
+
+    <div class="panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title"><center>Listagem dos Relatórios</center></h3>
+      </div>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="row">
+
+        <div class="col-lg-4 col-sm-4">
+          <%= link_to reports_weeks_reports_path do %>
+            <div class="img-reports">
+              <%= image_tag 'relatorio semanal.png' %>
+            </div>
+          <% end %>
+          <br>
+          <p style="text-align: justify; margin: 5px 10px;">Relatório semanal da dedicação
+          relativa por usuário, até a semana corrente da Sprint corrente;
+          dedicação relativa por equipe, até a semana corrente da Sprint
+          corrente, velocidade de pontos realizados e burndown.</p>
+          <div class="centered">
+            <%= link_to "Relatório semanal", reports_weeks_reports_path, class: 'btn btn-primary' %>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-4">
+          <div class="img-reports">
+          </div>
+          <br>
+          <p style="text-align: justify; margin: 5px 10px;">Relatório de final de Sprint da
+          dedicação relativa por usuário em cada semana da Sprint finalizada.</p>
+          <div class="centered">
+              <%= link_to "Relatório das Sprints", '#', class: 'btn btn-primary' %>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-4">
+          <div class="img-reports">
+          </div>
+          <br>
+          <p style="text-align: justify; margin: 5px 10px;">Relatório de atividades.</p>
+          <div class="centered">
+            <%= link_to "Relatório das Atividades", '#', class: 'btn btn-primary' %>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

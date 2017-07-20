@@ -21,10 +21,10 @@
                'macro_activities'].include? params[:controller] %>
           <% path = params[:controller] %>
         <% else %>
-          <% path = 'projects' %>
+          <% p_path = 'projects' %>
         <% end %>
 
-        <li class=<%= aside_bar_active("#{path}") %>>
+        <li class=<%= aside_bar_active("#{p_path}") %>>
           <%= link_to projects_path do %>
             Projetos
           <% end %>
@@ -52,10 +52,19 @@
           </li>
         <% end %>
 
-        <hr style="border-top-color: dimgray">
-        <li class="">
-          <a>Relatórios</a>
-        </li>
+        <% if current_user_total? %>
+          <hr style="border-top-color: dimgray">
+
+          <% if ['reports', 'reports/weeks_reports'].include? params[:controller] %>
+            <% r_path = params[:controller] %>
+          <% else %>
+            <% r_path = 'projects' %>
+          <% end %>
+
+          <li class=<%= aside_bar_active("#{r_path}") %>>
+            <%= link_to "Relatórios", reports_path %>
+          </li>
+        <% end %>
 
       </ul>
     </div>

@@ -62,6 +62,7 @@ class ProgressesController < ApplicationController
       format.pdf do
         render pdf: "report #{params[:project_id]}",
                disposition: "inline",
+               orientation: 'Landscape',
                template: "reports/pdf.html.erb",
                layout: "report_pdf",
                locals: { :@project => Project.find(params[:project]) },

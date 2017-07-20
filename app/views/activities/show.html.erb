@@ -12,13 +12,13 @@
       <ul class="breadcrumb">
         <div class="row">
 
-          <div class="col-lg-5 col-sm-5">
+          <div class="col-lg-5 col-sm-5 col-xs-5">
             <li><%= link_to "Projeto", project_path(@activity.project) %></li>
             <li class="active"><%= link_to "Sprint", sprint_path(@activity.sprint, project: @activity.project) %></li>
             <li class="active">Atividade</li>
           </div>
 
-          <div class="col-lg-6 col-sm-6">
+          <div class="col-lg-6 col-sm-6 col-xs-6">
 
             <div class="progress progress-striped active" style="margin-bottom: 0" data-toggle="tooltip" data-placement="bottom" title="Completude do projeto">
               <div class="progress-bar" style="width: <%= @activity.project.progresses.last.completeness %>%">
@@ -28,7 +28,7 @@
 
           </div>
 
-          <div class="col-lg-1 col-sm-1">
+          <div class="col-lg-1 col-sm-1 col-xs-1">
             <ul class="nav nav-pills pull-right">
               <li class="dropdown">
                 <a class="dropdown-toggle btn btn-primary" data-toggle="dropdown" style="padding: 0 15px">
