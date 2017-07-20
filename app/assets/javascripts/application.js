@@ -18,8 +18,8 @@
 //= require_tree .
 //= require bootstrap-datepicker
 //= require jquery.minicolors
-//= require Chart.bundle
-//= require chartkick
+
+
 
 function checkIfValidated(element){
   var input = $(element)[0];

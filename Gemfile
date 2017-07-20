@@ -9,8 +9,8 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
 gem 'rails-erd'
-# Create beautiful JavaScript charts with one line of Ruby http://chartkick.com
-gem "chartkick"
+# # Create beautiful JavaScript charts with one line of Ruby http://chartkick.com
+# gem "chartkick"
 # This gem embeddes the jQuery colorpicker in the Rails asset pipeline.
 gem 'jquery-minicolors-rails'
 # bootstrap glyphicons

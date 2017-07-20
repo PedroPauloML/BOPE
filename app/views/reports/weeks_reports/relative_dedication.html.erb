@@ -64,7 +64,7 @@
           }
         },
         "scale-y": {
-          "values": "0:100:25",
+          "values": "0:250:50",
           "format":"%v%"
         },
         "series": [
@@ -78,7 +78,7 @@
               .order('user_profiles.name')
               .where(project_id: @project.id).each do |hr| %>
 
-              <% values << ((hr.hours_performed * 100) / 54000).round(1) %>
+              <% values << ((hr.hours_performed * 100) / (w.expected_hours.to_f * 3600)).round(1) %>
 
             <% end %>
 

@@ -21,4 +21,5 @@ Rails.application.config.assets.precompile += %w( alert.js
 
 Rails.application.config.assets.precompile += %w( usebootstrap.css
                                                   bootstrap.css
+                                                  zingchart.min.js
                                                   usebootstrap.js )
