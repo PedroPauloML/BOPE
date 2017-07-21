@@ -7,5 +7,25 @@
       <%= p.description %>
     </h1>
     <div id="chart_<%= p.id %>"></div>
+
+    <p style="font-size: 8pt;text-align: justify;">
+      * Integrantes da equipe:
+
+      <% last_u = p.team.users
+                 .joins(:user_profile).order("user_profiles.name")
+                 .last %>
+
+      <% p.team.users.joins(:user_profile)
+         .order("user_profiles.name").each do |u| %>
+
+        <% unless u == last_u %>
+          <%= u.user_profile.name %>,
+        <% else %>
+          <%= u.user_profile.name %>.
+        <% end %>
+
+      <% end %>
+    </p>
+
   </div>
 <% end %>
