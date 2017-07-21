@@ -24,14 +24,15 @@
 
       <div class="row">
         <div class="col-lg-8 col-sm-6 col-xs-6">
-          <span class="title">Relatório para o projeto:</span>
+          <span class="title">Tipo de relatório:</span>
         </div>
 
         <div class="col-lg-4 col-sm-6 col-xs-6">
           <div class="select-user">
-            <%= select(:project, "id",
-                       Project.all.order(:description).collect {|p| [ p.description, p.id ] },
-                       {selected: "#{params[:project].present? ? params[:project] : ''}", include_blank: "-- Nome do projeto --"},
+            <%= select(:report, "kind",
+                       [['Dedicação relativa', 1],
+                        ['Acompanhamento por equipe', 2]],
+                       {selected: "#{params[:report_kind].present? ? params[:report_kind] : ''}"},
                        {class: 'form-control'}) %>
           </div>
         </div>
@@ -41,17 +42,55 @@
 
       <div class="row">
         <div class="col-lg-8 col-sm-6 col-xs-6">
+          <span class="title">Relatório para o projeto:</span>
+        </div>
+
+        <% if (!params[:report_kind].present?) || (params[:report_kind] == '1') %>
+          <div class="col-lg-4 col-sm-6 col-xs-6">
+            <div class="select-user">
+              <%= select(:project, "id",
+                         Project.all.order(:description).collect {|p| [ p.description, p.id ] },
+                         {selected: "#{params[:project].present? ? params[:project] : ''}", include_blank: "-- Nome do projeto --"},
+                         {class: 'form-control'}) %>
+            </div>
+          </div>
+        <% else %>
+          <div class="col-lg-4 col-sm-6 col-xs-6">
+            <div class="select-user">
+              <%= select(:project, "id", "",
+                         {include_blank: "-- Nome do projeto --"},
+                         {class: 'form-control', disabled: true}) %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <br>
+
+      <div class="row">
+        <div class="col-lg-8 col-sm-6 col-xs-6">
           <span class="title">Relatório para a sprint:</span>
         </div>
 
-        <% if params[:project].present? %>
+        <% if (params[:report_kind] == '1' && params[:project].present?) %>
 
           <% project = Project.find(params[:project]) %>
 
           <div class="col-lg-4 col-sm-6 col-xs-6">
             <div class="select-user">
               <%= select(:sprint, "id",
-                         project.sprints.order(:description).collect {|s| [ s.description, s.id ] },
+                         project.sprints.order(:description).collect {|s| [ "#{s.description} (#{s.semester})", s.id ] },
+                         {selected: "#{params[:sprint].present? ? params[:sprint] : ''}", include_blank: "-- Nome da sprint --"},
+                         {class: 'form-control'}) %>
+            </div>
+          </div>
+
+        <% elsif (params[:report_kind] == '2') %>
+
+          <div class="col-lg-4 col-sm-6 col-xs-6">
+            <div class="select-user">
+              <%= select(:sprint, "id",
+                         Sprint.all.order(:description).collect {|s| [ "#{s.description} (#{s.semester})", s.id ] },
                          {selected: "#{params[:sprint].present? ? params[:sprint] : ''}", include_blank: "-- Nome da sprint --"},
                          {class: 'form-control'}) %>
             </div>
@@ -73,55 +112,35 @@
 
       <br>
 
-      <button id="buscar" class="btn btn-success pull-right" onclick="buscarRelatorio()">Buscar</button>
+      <% if (params[:report_kind] == '1' && params[:project].present?) ||
+            (params[:report_kind] == '2') %>
+        <button id="buscar" class="btn btn-success pull-right" onclick="buscarRelatorio()">Buscar</button>
+      <% else %>
+        <button class="btn btn-success pull-right" disabled="disabled">Buscar</button>
+      <% end %>
 
       <br><br><br>
 
-      <% if params[:project].present? && params[:sprint].present? %>
-        <div class="chart">
-          <div id="chart"></div>
-          <p style="font-size: 8pt;text-align: justify;">
-            * Integrantes da equipe:
+      <!-- .chart -->
+      <% if (params[:report_kind].present? && params[:project].present? &&
+             params[:sprint].present?) ||
+            (params[:report_kind].present? && params[:sprint].present?) %>
 
-            <% last_u = Project.find(params[:project]).team.users
-                       .joins(:user_profile).order("user_profiles.name")
-                       .last %>
-
-            <% Project.find(params[:project]).team.users.joins(:user_profile)
-               .order("user_profiles.name").each do |u| %>
-
-              <% unless u == last_u %>
-                <%= u.user_profile.name %>,
-              <% else %>
-                <%= u.user_profile.name %>.
-              <% end %>
-
-            <% end %>
-         </p>
-        </div>
-
-        <br>
-
-        <p>Observações extras:</p>
-        <%= text_area :report, "observation", rows: 5 , style: "width: 100%; max-width: 100%;", class: 'form-control', onfocusout: 'setObservation(this)' %>
-
-        <br><br>
-
-        <%= form_tag reports_weeks_reports_relative_dedication_path, method: :get, style: 'display: inline-block' do %>
-          <%= hidden_field_tag :format, :pdf %>
-          <%= hidden_field_tag 'observation' %>
-          <%= hidden_field_tag 'project', params[:project] %>
-          <%= hidden_field_tag 'sprint', params[:sprint] %>
-
-          <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-info', target: '_blank' %> |
+        <% if params[:report_kind] == '1' %>
+          <%= render partial: 'reports/shared/chart_to_relative_dedication' %>
+        <% elsif params[:report_kind] == '2' %>
+          <%= render partial: 'reports/shared/chart_to_team_monitoring' %>
         <% end %>
 
       <% else %>
+
         <div class="chart">
-          <p>Primeiro indique os valores para projeto e sprint!</p>
+          <p>Primeiro indique as informações para a construção do relatório!</p>
           <br>
         </div>
+
       <% end %>
+      <!-- / .chart -->
 
       <%= link_to t('buttons.back'), reports_path, class: "btn btn-success" %>
 
@@ -135,16 +154,27 @@
   function buscarRelatorio() {
     var project_id = $("#project_id")[0];
     var sprint_id = $("#sprint_id")[0];
+    var report_kind = $("#report_kind")[0];
 
-    if (!project_id.value == ""){
+    if ((!project_id.value == "") || (project_id.hasAttribute("disabled"))){
 
       project_id.removeAttribute("style");
 
       if (!sprint_id.value == "") {
 
         sprint_id.removeAttribute("style");
-        var url = "/reports/weeks_reports/?project=" + project_id.value + "&sprint=" + sprint_id.value;
-        window.location.replace(url);
+
+        if (report_kind.value == '1') {
+
+          var url = "/reports/weeks_reports/?report_kind=" + report_kind.value + "&project=" + project_id.value + "&sprint=" + sprint_id.value;
+          window.location.replace(url);
+
+        } else if (report_kind.value == '2') {
+
+          var url = "/reports/weeks_reports/?report_kind=" + report_kind.value + "&sprint=" + sprint_id.value;
+          window.location.replace(url);
+
+        }
 
       } else {
         sprint_id.setAttribute("style", "box-shadow: 0 0 20px red");
@@ -168,83 +198,41 @@
       var sprint_id = $("#sprint_id")[0];
       sprint_id.setAttribute("disabled", "disabled");
       var project_id = $("#project_id")[0];
-      var url = "/reports/weeks_reports/?project=" + project_id.value;
+      var report_kind = $("#report_kind")[0];
+      var url = "/reports/weeks_reports/?report_kind=" + report_kind.value +"&project=" + project_id.value;
       window.location.replace(url);
+    });
+
+    $('#report_kind').bind('change', function () {
+
+      if ($("#report_kind")[0].value == '1') {
+        var sprint_id = $("#sprint_id")[0];
+        sprint_id.setAttribute("disabled", "disabled");
+        var project_id = $("#project_id")[0];
+        project_id.removeAttribute("disabled");
+        var report_kind = $("#report_kind")[0];
+        var url = "/reports/weeks_reports/?report_kind=" + report_kind.value;
+        window.location.replace(url);
+
+      } else if ($("#report_kind")[0].value == '2') {
+
+        var sprint_id = $("#sprint_id")[0];
+        sprint.removeAttribute("disabled");
+        var project_id = $("#project_id")[0];
+        project_id.setAttribute("disabled", "disabled");
+        var report_kind = $("#report_kind")[0];
+        var url = "/reports/weeks_reports/?report_kind=" + report_kind.value +
+                  "&sprint=" + sprint_id.value;
+        window.location.replace(url);
+      }
+
     });
   });
 
-  window.onload = function() {
-
-    <% hr_users = [] %>
-    <% project = Project.find(params[:project]) if params[:project].present? %>
-    <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
-
-    <% if project.present? && sprint.present? %>
-
-
-      zingchart.render({
-        id: "chart",
-        data: {
-          "type": "bar",
-          "title": {
-            "text": "Dedicação Relativa"
-          },
-          "legend": {
-            "layout":"1x", //row x column
-            "position": "50% 10%",
-            "padding": "10%",
-            "adjust-layout": "true"
-          },
-          "plotarea": {
-            "margin-top": "10%",
-            "margin-bottom": "25%"
-          },
-          "plot": {
-            "value-box": {
-              "text":"%v%",
-              "angle": -90,
-              "padding-bottom": "5px"
-            }
-          },
-          "scale-x": {
-            "labels": <%= raw (project.team.users.includes(:user_profile).order("user_profiles.name").collect { |u| u.user_profile.name }) %>,
-            "item": {
-              "font-size": "10pt",
-              "max-chars": 15,
-              "angle": -45
-            }
-          },
-          "scale-y": {
-            "values": "0:250:50",
-            "format":"%v%"
-          },
-          "series": [
-            <% w_count = 1 %>
-
-            <% sprint.weeks.each do |w| %>
-
-              <% values = [] %>
-
-              <% w.hours_registries.joins(user: [:user_profile])
-                .order('user_profiles.name')
-                .where(project_id: project.id).each do |hr| %>
-
-                <% values << ((hr.hours_performed * 100) / (w.expected_hours.to_f * 3600)).round(1) %>
-
-              <% end %>
-
-              {
-                "values": <%= values %>,
-                "text": "Semana <%= w_count %>"
-              },
-
-              <% w_count += 1 %>
-            <% end %>
-          ]
-        }
-      });
-
-    <% end %>
-  };
-
 </script>
+
+<% if params[:report_kind] == '1' %>
+  <%= render partial: 'reports/shared/zingchart_to_relative_dedication' %>
+<% elsif params[:report_kind] == '2' %>
+  <%= render partial: 'reports/shared/zingchart_to_team_monitoring' %>
+<% end %>

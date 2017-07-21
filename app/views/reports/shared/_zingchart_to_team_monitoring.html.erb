@@ -1,0 +1,58 @@
+<% sprint = Sprint.find(params[:sprint]) %>
+<% projects = Project.where(id: sprint.projects.ids).order(:description) %>
+
+<script>
+  window.onload = function() {
+    <% projects.each do |project| %>
+      zingchart.render({
+        id: "chart_<%= project.id %>",
+        data: {
+          "type": "line",
+          "title": {
+            "text": "Dedicação Relativa"
+          },
+          "plotarea": {
+            "margin-top": "10%"
+          },
+          "plot": {
+            "value-box": {
+              "text": "%v%"
+            }
+          },
+          "scale-x": {
+            "labels": <%= raw (sprint.weeks
+                               .order(:description)
+                               .collect { |w| w.description }) %>
+          },
+          "scale-y": {
+            "values": "0:125:25",
+            "format":"%v%"
+          },
+          "series": [
+
+            <% avgs = [] %>
+
+            <% sprint.weeks.each do |w| %>
+
+              <% values = 0 %>
+
+              <% w.hours_registries.where(project_id: project.id).each do |hr| %>
+
+                <% values += ((hr.hours_performed * 100) / (w.expected_hours.to_f * 3600)).round(1) %>
+
+              <% end %>
+
+              <% avgs << (values / projects.first.team.users.count).round(1) %>
+
+            <% end %>
+
+            {
+              "values": <%= avgs %>
+            },
+
+          ]
+        }
+      });
+    <% end %>
+  };
+</script>

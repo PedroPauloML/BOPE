@@ -22,7 +22,8 @@ class Reports::WeeksReportsController < ReportsController
         render template: "reports/weeks_reports/relative_dedication.html.erb",
                layout: "reports/weeks_reports",
                locals: { :@project => Project.find(params[:project]),
-                         :@sprint => Sprint.find(params[:project]) }
+                         :@sprint => Sprint.find(params[:project]),
+                         :@observation => params[:observation] }
        end
     end
   end

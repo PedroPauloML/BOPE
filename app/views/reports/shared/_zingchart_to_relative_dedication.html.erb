@@ -1,0 +1,77 @@
+<script>
+  window.onload = function() {
+
+    <% hr_users = [] %>
+    <% project = Project.find(params[:project]) if params[:project].present? %>
+    <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
+
+    <% if project.present? && sprint.present? %>
+
+      zingchart.render({
+        id: "chart",
+        data: {
+          "type": "bar",
+          "title": {
+            "text": "Dedicação Relativa"
+          },
+          "legend": {
+            "layout":"1x", //row x column
+            "position": "50% 10%",
+            "padding": "10%",
+            "adjust-layout": "true"
+          },
+          "plotarea": {
+            "margin-top": "10%",
+            "margin-bottom": "25%"
+          },
+          "plot": {
+            "value-box": {
+              "text":"%v%",
+              "angle": -90,
+              "padding-bottom": "5px"
+            }
+          },
+          "scale-x": {
+            "labels": <%= raw (project.team.users.includes(:user_profile)
+                          .order("user_profiles.name")
+                          .collect { |u| u.user_profile.name }) %>,
+            "item": {
+              "font-size": "10pt",
+              "max-chars": 15,
+              "angle": -45
+            }
+          },
+          "scale-y": {
+            "values": "0:250:50",
+            "format":"%v%"
+          },
+          "series": [
+            <% w_count = 1 %>
+
+            <% sprint.weeks.each do |w| %>
+
+              <% values = [] %>
+
+              <% w.hours_registries.joins(user: [:user_profile])
+                .order('user_profiles.name')
+                .where(project_id: project.id).each do |hr| %>
+
+                <% values << ((hr.hours_performed * 100) /
+                              (w.expected_hours.to_f * 3600)).round(1) %>
+
+              <% end %>
+
+              {
+                "values": <%= values %>,
+                "text": "Semana <%= w_count %>"
+              },
+
+              <% w_count += 1 %>
+            <% end %>
+          ]
+        }
+      });
+
+    <% end %>
+  };
+</script>
