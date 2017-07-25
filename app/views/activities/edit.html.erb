@@ -100,6 +100,51 @@
               <% end %>
             </div>
 
+            <div class="form-group">
+              <hr style="border-top-color: dimgray">
+              <% if @activity.project.sprints.where('inicio <= ? AND fim >= ?',
+                    Time.zone.now.to_date, Time.zone.now.to_date).present? %>
+
+                <% s = @activity.project.sprints.where(
+                       'inicio <= ? AND fim >= ?', Time.zone.now.to_date,
+                                                  Time.zone.now.to_date) %>
+                <% w = s.first.weeks.where(
+                      'start_w <= ? && end_w >= ?', Time.zone.now.to_date,
+                                                    Time.zone.now.to_date) %>
+
+                <label class="col-lg-2 control-label">Burndown: </label>
+                <div class="col-lg-6">
+                  <%= hidden_field_tag "burndown[week_id]", w.id %>
+                  <%= "#{s.description} - #{w.description}" %>
+                </div>
+
+              <% else %>
+
+                <label class="col-lg-2 control-label">Burndown: </label>
+                <div class="col-lg-6">
+
+                  <% sprints = @activity.project.sprints %>
+
+                  <% weeks_sprints = [] %>
+
+                  <% sprints.each do |s| %>
+                    <% w_s = [] %>
+                    <% s.weeks.each do |w| %>
+                      <% w_s << ["#{s.description} - #{w.description}", w.id] %>
+                    <% end %>
+                    <% weeks_sprints << [s.description, w_s] %>
+                  <% end %>
+
+                  <%= select(:burndown, "week_id",
+                          grouped_options_for_select(weeks_sprints),
+                          {include_blank: "--- Sprint/Semana para o burndown ---"},
+                          {class: "form-control", required: true}) %>
+                </div>
+              <% end %>
+            </div>
+
+            <br>
+
           </fieldset>
         </div>
 

@@ -48,10 +48,10 @@
 
                 <%# VERIFICA SE EXISTE ALGUMA SPRINT EM ANDAMENTO %>
                 <% if project.sprints.where('inicio <= ? AND fim >= ?',
-                                            Date.today, Date.today).present? %>
+                                            Time.zone.now.to_date, Time.zone.now.to_date).present? %>
 
                   <%# RECUPERA A SEMANA CORRENTE DA SPRINT EM ANDAMENTO %>
-                  <% w_id = project.sprints.where('inicio <= ? AND fim >= ?', Date.today, Date.today).first.weeks.where('start_w <= ? AND end_w >= ?',Date.today, Date.today).first.id %>
+                  <% w_id = project.sprints.where('inicio <= ? AND fim >= ?', Time.zone.now.to_date, Time.zone.now.to_date).first.weeks.where('start_w <= ? AND end_w >= ?',Time.zone.now.to_date, Time.zone.now.to_date).first.id %>
 
                   <%# VERIFICA SE EXISTE ALGUM REGISTRO DE HORA NESSA SEMANA
                       DESSE USUÁRIO %>

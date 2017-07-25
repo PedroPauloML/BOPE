@@ -39,7 +39,7 @@
           <div class="form-group">
             <label class="col-lg-2 control-label">Semestre:</label>
             <div class="col-lg-2">
-              <%= f.text_field :semester, class: 'form-control', placeholder: "(ex.: #{Date.today.year.to_s.last(2)}.1)", onfocusout: "checkIfValidated(this)" %>
+              <%= f.text_field :semester, class: 'form-control', placeholder: "(ex.: #{Time.zone.now.to_date.year.to_s.last(2)}.1)", onfocusout: "checkIfValidated(this)" %>
             </div>
           </div>
 

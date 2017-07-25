@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  points_made: 1.5
+  activities_updates: 1
+  project: one
+  week: one
+
+two:
+  points_made: 1.5
+  activities_updates: 1
+  project: two
+  week: two

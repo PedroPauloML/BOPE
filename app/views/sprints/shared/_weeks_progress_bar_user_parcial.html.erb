@@ -1,6 +1,6 @@
-<% if @sprint.weeks.where('start_w <= ? AND end_w >= ?', Date.today, Date.today).present? %>
+<% if @sprint.weeks.where('start_w <= ? AND end_w >= ?', Time.zone.now.to_date, Time.zone.now.to_date).present? %>
   <% current_week = @sprint.weeks.where('start_w <= ? AND end_w >= ?',
-                                        Date.today, Date.today).first %>
+                                        Time.zone.now.to_date, Time.zone.now.to_date).first %>
 
   <%# VERIFICA SE EXISTE ALGUM REGISTRO DE HORA NA SEMANA CORRENTE %>
   <% if current_week.hours_registries.where(user_id: current_user.id, project_id: @project.id).present? %>

@@ -1,6 +1,6 @@
 <% @sprint.weeks.each do |week| %>
 
-  <tr <%= "class=current_period" if Date.today.between?(week.start_w, week.end_w) %>>
+  <tr <%= "class=current_period" if Time.zone.now.to_date.between?(week.start_w, week.end_w) %>>
 
     <td>
       <%= week.description %>

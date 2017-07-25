@@ -39,7 +39,7 @@
           <div class="form-group">
             <label class="col-lg-2 control-label">Semestre:</label>
             <div class="col-lg-2">
-              <%= f.text_field :semester, class: 'form-control', placeholder: "(ex.: #{Date.today.year.to_s.last(2)}.1)", onfocusout: "checkIfValidated(this)" %>
+              <%= f.text_field :semester, class: 'form-control', placeholder: "(ex.: #{Time.zone.now.to_date.year.to_s.last(2)}.1)", onfocusout: "checkIfValidated(this)" %>
             </div>
           </div>
 
@@ -49,14 +49,14 @@
               <div class="col-lg-12 col-sm-4 col-xs-4 sprint-date">
                 <label class="col-lg-2 col-sm-4 col-xs-4 control-label">Início: </label>
                 <div class="col-lg-2 col-sm-8 col-xs-8">
-                  <%= f.text_field :inicio, value: l(Date.today), class: 'form-control datepicker', onfocusout: "checkIfValidated(this)", onchange: 'setSprintFim(this.value)', readonly: true %>
+                  <%= f.text_field :inicio, value: l(Time.zone.now.to_date), class: 'form-control datepicker', onfocusout: "checkIfValidated(this)", onchange: 'setSprintFim(this.value)', readonly: true %>
                 </div>
               </div>
 
               <div class="col-lg-12 col-sm-4 col-xs-4">
                 <label class="col-lg-2 col-sm-4 col-xs-4 control-label">Fim:</label>
                 <div class="col-lg-2 col-sm-8 col-xs-8">
-                  <%= f.text_field :fim, value: l(Date.today + 7), class: 'form-control datepicker', onfocusout: "checkIfValidated(this)", readonly: true %>
+                  <%= f.text_field :fim, value: l(Time.zone.now.to_date + 7), class: 'form-control datepicker', onfocusout: "checkIfValidated(this)", readonly: true %>
                 </div>
               </div>
 

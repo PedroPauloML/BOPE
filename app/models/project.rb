@@ -11,6 +11,7 @@ class Project < ApplicationRecord
   has_many :progresses, dependent: :destroy
 
   has_many :hours_registries, dependent: :destroy
+  has_many :burndowns, dependent: :destroy
 
 
   # Validations

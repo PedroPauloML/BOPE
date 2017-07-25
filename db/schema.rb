@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170627150059) do
+ActiveRecord::Schema.define(version: 20170724203848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,17 @@ ActiveRecord::Schema.define(version: 20170627150059) do
     t.index ["sprint_id"], name: "index_activities_on_sprint_id", using: :btree
     t.index ["status_id"], name: "index_activities_on_status_id", using: :btree
     t.index ["user_id"], name: "index_activities_on_user_id", using: :btree
+  end
+
+  create_table "burndowns", force: :cascade do |t|
+    t.float    "points_made"
+    t.integer  "activities_updates",              array: true
+    t.integer  "project_id"
+    t.integer  "week_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["project_id"], name: "index_burndowns_on_project_id", using: :btree
+    t.index ["week_id"], name: "index_burndowns_on_week_id", using: :btree
   end
 
   create_table "colors", force: :cascade do |t|
@@ -178,6 +189,8 @@ ActiveRecord::Schema.define(version: 20170627150059) do
   add_foreign_key "activities", "sprints"
   add_foreign_key "activities", "statuses"
   add_foreign_key "activities", "users"
+  add_foreign_key "burndowns", "projects"
+  add_foreign_key "burndowns", "weeks"
   add_foreign_key "hours_registries", "projects"
   add_foreign_key "hours_registries", "users"
   add_foreign_key "hours_registries", "weeks"

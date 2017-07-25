@@ -1,31 +1,54 @@
-<% sprint = Sprint.find(params[:sprint]) %>
-<% projects = Project.where(id: sprint.projects.ids).order(:description) %>
+<% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
 
-<% projects.each do |p| %>
-  <div class="chart">
-    <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
-      <%= p.description %>
-    </h1>
-    <div id="chart_<%= p.id %>"></div>
+<% if sprint.present? %>
 
-    <p style="font-size: 8pt;text-align: justify;">
-      * Integrantes da equipe:
+  <% projects = Project.where(id: sprint.projects.ids).order(:description) %>
 
-      <% last_u = p.team.users
-                 .joins(:user_profile).order("user_profiles.name")
-                 .last %>
+  <% unless projects.blank? %>
 
-      <% p.team.users.joins(:user_profile)
-         .order("user_profiles.name").each do |u| %>
+    <% projects.each do |p| %>
 
-        <% unless u == last_u %>
-          <%= u.user_profile.name %>,
-        <% else %>
-          <%= u.user_profile.name %>.
-        <% end %>
+      <div class="chart">
+        <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+          <%= p.description %>
+        </h1>
 
-      <% end %>
-    </p>
+        <div id="chart_<%= p.id %>_relative_dedication"></div>
+        <div id="chart_<%= p.id %>_speed"></div>
+        <div id="chart_<%= p.id %>_burndown"></div>
 
-  </div>
+        <p style="font-size: 8pt;text-align: justify;">
+          * Integrantes da equipe:
+
+          <% last_u = p.team.users
+                     .joins(:user_profile).order("user_profiles.name")
+                     .last %>
+
+          <% p.team.users.joins(:user_profile)
+             .order("user_profiles.name").each do |u| %>
+
+            <% unless u == last_u %>
+              <%= u.user_profile.name %>,
+            <% else %>
+              <%= u.user_profile.name %>.
+            <% end %>
+
+          <% end %>
+        </p>
+
+      </div>
+    <% end %>
+  <% else %>
+    <div class="chart">
+      <p>Nenhuma informação encontrada :'(</p><br>
+    </div>
+  <% end %>
+
+  <%= form_tag reports_weeks_reports_team_monitoring_path, method: :get, style: 'display: inline-block' do %>
+    <%= hidden_field_tag :format, :pdf %>
+    <%= hidden_field_tag 'sprint', params[:sprint] %>
+
+    <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-info', target: '_blank' %> |
+  <% end %>
+
 <% end %>

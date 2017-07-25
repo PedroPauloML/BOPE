@@ -32,9 +32,11 @@
             }
           },
           "scale-x": {
-            "labels": <%= raw (project.team.users.includes(:user_profile)
-                          .order("user_profiles.name")
-                          .collect { |u| u.user_profile.name }) %>,
+            <% labels = project.team.users.includes(:user_profile)
+                        .order("user_profiles.name")
+                        .collect { |u| u.user_profile.name } %>
+            <% labels << 'Lab.' %>
+            "labels": <%= raw labels %>,
             "item": {
               "font-size": "10pt",
               "max-chars": 15,
@@ -60,6 +62,12 @@
                               (w.expected_hours.to_f * 3600)).round(1) %>
 
               <% end %>
+
+              <% avg_lab = 0 %>
+              <% values.each do |v| %>
+                <% avg_lab += v %>
+              <% end %>
+              <% values << (avg_lab / values.count).round(1) %>
 
               {
                 "values": <%= values %>,

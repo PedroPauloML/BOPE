@@ -35,7 +35,31 @@ class ActivitiesController < ApplicationController
   def update
 
     if activity_params[:status_id].to_i == Status.where(description: 'Validado').first.id
-      @activity.pontos_atualizados = @activity.pontos_cadastrados
+
+      if Burndown.where(project_id: @activity.project.id,
+                        week_id: params[:burndown][:week_id]).present?
+
+        bd = Burndown.where(project_id: @activity.project.id,
+                        week_id: params[:burndown][:week_id]).first
+
+        if bd.activities_updates.include? @activity.id
+          bd.points_made += (params[:activity][:pontos_cadastrados].to_f -
+                             @activity.pontos_cadastrados)
+          bd.save
+        else
+          bd.activities_updates << @activity.id
+          bd.points_made += params[:activity][:pontos_cadastrados].to_f
+          bd.save
+        end
+      else
+        Burndown.create(
+          points_made: @activity.pontos_cadastrados,
+          activities_updates: [@activity.id],
+          project_id: @activity.project.id,
+          week_id: params[:burndown][:week_id])
+      end
+
+      @activity.pontos_atualizados = params[:activity][:pontos_cadastrados].to_f
     else
       @activity.pontos_atualizados = 0
     end

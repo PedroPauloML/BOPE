@@ -24,6 +24,7 @@ namespace :dev do
     puts %x(rails dev:generate_macro_activities)
     puts %x(rails dev:generate_progresses)
     puts %x(rails dev:generate_hours_registries)
+    puts %x(rails dev:generate_burndown)
 
   end
 #---------------------------------------------------#
@@ -342,6 +343,40 @@ end
     end
 
     puts "Gerando os REGISTROS de HORAS... [OK]"
+  end
+#---------------------------------------------------#
+
+  task generate_burndown: :environment do
+
+    puts "Gerando o BURNDOWN..."
+
+    Project.all.each do |p|
+      p.sprints.each do |s|
+
+        pontos_atualizados = 0
+        Activity.where(project_id: p.id, sprint_id: s.id).each do |a|
+          if a.status.description == 'Validado' &&
+            a.pontos_atualizados.present?
+           pontos_atualizados += a.pontos_atualizados.round(1)
+          end
+        end
+
+        s.weeks.each do |w|
+          number = Random.rand(0..pontos_atualizados).round(1)
+          Burndown.create(
+            points_made: number,
+            activities_updates: [p.activities.sample.id],
+            project_id: p.id,
+            week_id: w.id
+            )
+          (pontos_atualizados - number) < 0 ?
+           pontos_atualizados = 0 :
+           pontos_atualizados -= number
+        end
+      end
+    end
+
+    puts "Gerando o BURNDOWN... [OK]"
   end
 #---------------------------------------------------#
 

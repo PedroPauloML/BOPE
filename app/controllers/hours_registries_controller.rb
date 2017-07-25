@@ -3,7 +3,7 @@ class HoursRegistriesController < ApplicationController
   def login
 
     # Verificar se existe uma semana em andamento
-    if Week.where('start_w <= ? AND end_w >= ?', Date.today, Date.today).present?
+    if Week.where('start_w <= ? AND end_w >= ?', Time.zone.now.to_date, Time.zone.now.to_date).present?
 
       # Se existe algum registro de horas já criada nessa semana em andamento,
       # do usuário corrente e desse projeto selecionado

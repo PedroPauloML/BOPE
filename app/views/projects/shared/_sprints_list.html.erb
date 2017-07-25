@@ -17,7 +17,7 @@
 
   <tbody>
     <% @sprints.order(:semester).each do |sprint| %>
-      <tr <%= "class=current_period" if Date.today.between?(sprint.inicio, sprint.fim) %>>
+      <tr <%= "class=current_period" if Time.zone.now.to_date.between?(sprint.inicio, sprint.fim) %>>
 
         <td>
           <%= sprint.description %>
