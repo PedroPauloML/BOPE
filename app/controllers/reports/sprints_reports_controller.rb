@@ -25,4 +25,24 @@ class Reports::SprintsReportsController < ReportsController
        end
     end
   end
+
+  def activities_list
+    respond_to do |format|
+      format.pdf do
+        render pdf: "report_#{Sprint.find(params[:sprint]).description}",
+               disposition: "inline",
+               template: "reports/sprints_reports/activities_list.html.erb",
+               orientation: 'Landscape',
+               layout: "reports/weeks_reports",
+               locals: { :@sprint => Sprint.find(params[:sprint]) },
+               page_size: 'A4',
+               encoding: 'utf8'
+      end
+      format.html do
+        render template: "reports/sprints_reports/activities_list.html.erb",
+               layout: "reports/weeks_reports",
+               locals: { :@sprint => Sprint.find(params[:sprint]) }
+       end
+    end
+  end
 end

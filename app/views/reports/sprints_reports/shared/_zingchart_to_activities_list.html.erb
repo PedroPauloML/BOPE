@@ -1,0 +1,98 @@
+<% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
+
+<% if sprint.present? %>
+  <% projects = Project.where(id: sprint.projects.ids).order(:description) %>
+
+  <script>
+    window.onload = function() {
+      <%# DEDICAÇÃO RELATIVA %>
+      <% projects.each do |project| %>
+
+        <% sprints = project.sprints.where(id: [1..sprint.id])
+                     .order(:description, :semester) %>
+
+        zingchart.render({
+          id: "chart_<%= project.id %>",
+          data: {
+            "type": "vbar",
+            "title": {
+              "text": "Atividades Propostas vs Atividades Realizadas"
+            },
+            "legend": {
+              "layout":"2x", //row x column
+              "position": "50% 10%",
+              "padding": "10%",
+              "adjust-layout": "true"
+            },
+            "plotarea": {
+              "margin-top": "10%",
+              "margin-bottom": "dynamic"
+            },
+            "plot": {
+              "value-box": {
+                "text": "%v"
+              }
+            },
+            "scale-x": {
+              <% values = [] %>
+              <% sprints.count.times do %>
+                <% values << "Atv. propostas" %>
+                <% values << "Atv. realizadas" %>
+              <% end %>
+              "values": <%= raw(values) %>,
+              "item": {
+                "offsetY": -35,
+                "angle": 270
+              },
+              "tick": {
+                "size": 40
+              }
+            },
+            "scale-x-2": {
+              "values": <%= raw (sprints.collect { |w| w.description }) %>,
+              "placement": "default",
+              "item": {
+                "offsetY": -20,
+              },
+              "tick": {
+                "size": 20,
+                "placement": "cross"
+              }
+            },
+            "scale-y": {
+              <% max_l = project.activities.collect { |a| a.label_id }.max %>
+              "values": "0:<%= max_l + 5 %>:5",
+              "format":"%v"
+            },
+            "series": [
+
+              <% Label.all.each do |l| %>
+
+                <% datas = [] %>
+
+                <% sprints.each do |s| %>
+                  <% count = project.activities.where(sprint_id: s.id,
+                                                      label_id: l.id)
+                                                      .count %>
+                  <% validated = project.activities.where(
+                                    sprint_id: s.id,
+                                    label_id: l.id,
+                                    status_id: Status.where(
+                                                 description: 'Validado'
+                                               ).first.id
+                                    ).count %>
+                  <% datas << count %>
+                  <% datas << validated %>
+                <% end %>
+                {
+                  "values": <%= raw(datas.to_json) %>,
+                  "text": "<%= l.description %>"
+                },
+              <% end %>
+            ]
+          }
+        });
+      <% end %>
+    };
+  </script>
+<% end %>

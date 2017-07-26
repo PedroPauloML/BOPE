@@ -210,6 +210,11 @@
         sprint_id.setAttribute("disabled", "disabled");
         var project_id = $("#project_id")[0];
         project_id.removeAttribute("disabled");
+        project_id.setAttribute("disabled", "disabled");
+        var button = $("#buscar")[0];
+        if (!(button == undefined)){
+          button.setAttribute("disabled", "disabled");
+        }
         var report_kind = $("#report_kind")[0];
         var url = "/reports/weeks_reports/?report_kind=" + report_kind.value;
         window.location.replace(url);
@@ -217,12 +222,15 @@
       } else if ($("#report_kind")[0].value == '2') {
 
         var sprint_id = $("#sprint_id")[0];
-        sprint_id.removeAttribute("disabled");
+        sprint_id.setAttribute("disabled", "disabled");
         var project_id = $("#project_id")[0];
         project_id.setAttribute("disabled", "disabled");
+        var button = $("#buscar")[0];
+        if (!(button == undefined)){
+          button.setAttribute("disabled", "disabled");
+        }
         var report_kind = $("#report_kind")[0];
-        var url = "/reports/weeks_reports/?report_kind=" + report_kind.value +
-                  "&sprint=" + sprint_id.value;
+        var url = "/reports/weeks_reports/?report_kind=" + report_kind.value;
         window.location.replace(url);
       }
 

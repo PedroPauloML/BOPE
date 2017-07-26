@@ -87,16 +87,16 @@
             </div>
           </div>
 
-        <%# elsif (params[:report_kind] == '2') %>
+        <% elsif (params[:report_kind] == '2') %>
 
-          <!-- <div class="col-lg-4 col-sm-6 col-xs-6">
+          <div class="col-lg-4 col-sm-6 col-xs-6">
             <div class="select-user">
-              <%#= select(:sprint, "id",
+              <%= select(:sprint, "id",
                          Sprint.all.order(:description).collect {|s| [ "#{s.description} (#{s.semester})", s.id ] },
                          {selected: "#{params[:sprint].present? ? params[:sprint] : ''}", include_blank: "-- Nome da sprint --"},
                          {class: 'form-control'}) %>
             </div>
-          </div> -->
+          </div>
 
         <% else %>
 
@@ -114,8 +114,8 @@
 
       <br>
 
-      <% if (params[:report_kind] == '1' && params[:project].present?) # ||
-            #(params[:report_kind] == '2') %>
+      <% if (params[:report_kind] == '1' && params[:project].present?) ||
+            (params[:report_kind] == '2') %>
         <button id="buscar" class="btn btn-success pull-right" onclick="buscarRelatorio()">Buscar</button>
       <% else %>
         <button class="btn btn-success pull-right" disabled="disabled">Buscar</button>
@@ -130,8 +130,8 @@
 
         <% if params[:report_kind] == '1' %>
           <%= render partial: 'reports/sprints_reports/shared/chart_to_relative_dedication' %>
-        <%# elsif params[:report_kind] == '2' %>
-          <%#= render partial: 'reports/sprints_reports/shared/chart_to_team_monitoring' %>
+        <% elsif params[:report_kind] == '2' %>
+          <%= render partial: 'reports/sprints_reports/shared/chart_to_activities_list' %>
         <% end %>
 
       <% else %>
@@ -212,19 +212,25 @@
         sprint_id.setAttribute("disabled", "disabled");
         var project_id = $("#project_id")[0];
         project_id.removeAttribute("disabled");
-        var report_kind = $("#report_kind")[0];
+        project_id.setAttribute("disabled", "disabled");
+        var button = $("#buscar")[0];
+        if (!(button == undefined)){
+          button.setAttribute("disabled", "disabled");
+        }
         var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
         window.location.replace(url);
 
       } else if ($("#report_kind")[0].value == '2') {
 
         var sprint_id = $("#sprint_id")[0];
-        sprint_id.removeAttribute("disabled");
+        sprint_id.setAttribute("disabled", "disabled");
         var project_id = $("#project_id")[0];
         project_id.setAttribute("disabled", "disabled");
-        var report_kind = $("#report_kind")[0];
-        var url = "/reports/sprints_reports/?report_kind=" + report_kind.value +
-                  "&sprint=" + sprint_id.value;
+        var button = $("#buscar")[0];
+        if (!(button == undefined)){
+          button.setAttribute("disabled", "disabled");
+        }
+        var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
         window.location.replace(url);
       }
 
@@ -236,5 +242,5 @@
 <% if params[:report_kind] == '1' %>
   <%= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_dedication' %>
 <% elsif params[:report_kind] == '2' %>
-  <%= render partial: 'reports/sprints_reports/shared/zingchart_to_team_monitoring' %>
+  <%= render partial: 'reports/sprints_reports/shared/zingchart_to_activities_list' %>
 <% end %>
