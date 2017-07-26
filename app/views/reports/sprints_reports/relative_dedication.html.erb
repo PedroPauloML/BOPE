@@ -1,5 +1,5 @@
 <%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
-<h1>Relatório de Dedicação Semanal <%= @sprint.semester %></h1>
+<h1>Relatório de Dedicação Relativa na <%= "#{@sprint.description} (#{@sprint.semester})" %></h1>
 <b>Desenvolvido por:</b> Lorena Souza Costa <br>
 <b>Data:</b> <%= l(Time.zone.today) %> <br>
 
@@ -28,4 +28,4 @@
   OBS.: <%= @observation %>
 </p>
 
-<%= render partial: 'reports/weeks_reports/shared/zingchart_to_relative_dedication' %>
+<%= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_dedication' %>

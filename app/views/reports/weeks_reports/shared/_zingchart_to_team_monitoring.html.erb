@@ -35,7 +35,19 @@
 
               <% avgs = [] %>
 
-              <% sprint.weeks.each do |w| %>
+              <% current_week = sprint.weeks.where(
+                                  'start_w <= ? and end_w >= ?',
+                                  Time.zone.now.to_date,
+                                  Time.zone.now.to_date) %>
+
+              <% if current_week.present? %>
+                <% weeks = sprint.weeks.where('id <= ?', current_week.id)
+                           .order(:description) %>
+              <% else %>
+                <% weeks = sprint.weeks.order(:description) %>
+              <% end %>
+
+              <% weeks.each do |w| %>
 
                 <% values = 0 %>
 

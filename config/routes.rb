@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     resources :weeks_reports, only: [:index]
     get '/weeks_reports/relative_dedication' => 'weeks_reports#relative_dedication'
     get '/weeks_reports/team_monitoring' => 'weeks_reports#team_monitoring'
+    resources :sprints_reports, only: [:index]
+    get '/sprints_reports/relative_dedication' => 'sprints_reports#relative_dedication'
   end
 
   post '/projects/:id/login', to: 'hours_registries#login', as: 'project_login'

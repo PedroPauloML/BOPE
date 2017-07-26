@@ -50,13 +50,24 @@
           "series": [
             <% w_count = 1 %>
 
-            <% sprint.weeks.each do |w| %>
+            <% current_week = sprint.weeks.where('start_w <= ? and end_w >= ?',
+                                                 Time.zone.now.to_date,
+                                                 Time.zone.now.to_date) %>
+
+            <% if current_week.present? %>
+              <% weeks = sprint.weeks.where('id <= ?', current_week.id)
+                         .order(:description) %>
+            <% else %>
+              <% weeks = sprint.weeks.order(:description) %>
+            <% end %>
+
+            <% weeks.each do |w| %>
 
               <% values = [] %>
 
               <% w.hours_registries.joins(user: [:user_profile])
-                .order('user_profiles.name')
-                .where(project_id: project.id).each do |hr| %>
+                 .order('user_profiles.name')
+                 .where(project_id: project.id).each do |hr| %>
 
                 <% values << ((hr.hours_performed * 100) /
                               (w.expected_hours.to_f * 3600)).round(1) %>
