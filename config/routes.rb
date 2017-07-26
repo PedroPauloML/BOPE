@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     resources :sprints_reports, only: [:index]
     get '/sprints_reports/relative_dedication' => 'sprints_reports#relative_dedication'
     get '/sprints_reports/activities_list' => 'sprints_reports#activities_list'
+    get '/sprints_reports/advance_and_completeness' => 'sprints_reports#advance_and_completeness'
   end
 
   post '/projects/:id/login', to: 'hours_registries#login', as: 'project_login'

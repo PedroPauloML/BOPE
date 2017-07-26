@@ -235,5 +235,4 @@ input[readonly]{
 .description + [data-readmore-toggle], .description[data-readmore] {
     display: block;
     margin: 10px 0 10px 10px;
-    width: 100%;
 }

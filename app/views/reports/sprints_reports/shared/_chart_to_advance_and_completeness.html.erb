@@ -1,0 +1,33 @@
+<div class="chart">
+
+  <div id="chart_<%= params[:project] %>"></div>
+
+  <p style="font-size: 8pt;text-align: justify;">
+    * Integrantes da equipe:
+
+    <% last_u = Project.find(params[:project]).team.users
+               .joins(:user_profile).order("user_profiles.name")
+               .last %>
+
+    <% Project.find(params[:project]).team.users.joins(:user_profile)
+       .order("user_profiles.name").each do |u| %>
+
+      <% unless u == last_u %>
+        <%= u.user_profile.name %>,
+      <% else %>
+        <%= u.user_profile.name %>.
+      <% end %>
+
+    <% end %>
+  </p>
+</div>
+
+<br><br>
+
+<%= form_tag reports_sprints_reports_advance_and_completeness_path, method: :get, style: 'display: inline-block' do %>
+  <%= hidden_field_tag :format, :pdf %>
+  <%= hidden_field_tag 'project', params[:project] %>
+  <%= hidden_field_tag 'sprint', params[:sprint] %>
+
+  <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-info', target: '_blank' %> |
+<% end %>
