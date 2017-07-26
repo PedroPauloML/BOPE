@@ -3,10 +3,39 @@
 <% if sprint.present? %>
   <% projects = Project.where(id: sprint.projects.ids).order(:description) %>
 
+  <% current_week = sprint.weeks.where(
+                      'start_w <= ? and end_w >= ?',
+                      Time.zone.now.to_date,
+                      Time.zone.now.to_date) %>
+
+  <% if current_week.present? %>
+    <% weeks = sprint.weeks.where('id <= ?', current_week.id)
+               .order(:description) %>
+  <% else %>
+    <% weeks = sprint.weeks.order(:description) %>
+  <% end %>
+
   <script>
     window.onload = function() {
       <%# DEDICAÇÃO RELATIVA %>
       <% projects.each do |project| %>
+
+        <% avgs = [] %>
+
+        <% sprint.weeks.each do |w| %>
+
+          <% values = 0 %>
+
+          <% w.hours_registries.where(project_id: project.id).each do |hr| %>
+
+            <% values += ((hr.hours_performed * 100) / (w.expected_hours.to_f * 3600)).round(1) %>
+
+          <% end %>
+
+          <% avgs << (values / projects.first.team.users.count).round(1) %>
+
+        <% end %>
+
         zingchart.render({
           id: "chart_<%= project.id %>_relative_dedication",
           data: {
@@ -28,43 +57,13 @@
                                  .collect { |w| w.description }) %>
             },
             "scale-y": {
-              "values": "0:125:25",
+              "values": "0:<%= avgs.max + 10 %>:10",
               "format":"%v%"
             },
             "series": [
-
-              <% avgs = [] %>
-
-              <% current_week = sprint.weeks.where(
-                                  'start_w <= ? and end_w >= ?',
-                                  Time.zone.now.to_date,
-                                  Time.zone.now.to_date) %>
-
-              <% if current_week.present? %>
-                <% weeks = sprint.weeks.where('id <= ?', current_week.id)
-                           .order(:description) %>
-              <% else %>
-                <% weeks = sprint.weeks.order(:description) %>
-              <% end %>
-
-              <% weeks.each do |w| %>
-
-                <% values = 0 %>
-
-                <% w.hours_registries.where(project_id: project.id).each do |hr| %>
-
-                  <% values += ((hr.hours_performed * 100) / (w.expected_hours.to_f * 3600)).round(1) %>
-
-                <% end %>
-
-                <% avgs << (values / projects.first.team.users.count).round(1) %>
-
-              <% end %>
-
               {
                 "values": <%= avgs %>
               },
-
             ]
           }
         });
@@ -75,7 +74,7 @@
 
         <% speed = [] %>
 
-        <% Burndown.where(project_id: project.id, week_id: sprint.weeks.ids).each do |b| %>
+        <% Burndown.where(project_id: project.id, week_id: weeks.ids).each do |b| %>
 
           <% speed << b.points_made %>
 
@@ -163,7 +162,7 @@
 
 
               <% expected_hours_for_week = [] %>
-              <% pass = (expected_hours.to_f / sprint.weeks.count.to_f).round(1) %>
+              <% pass = (expected_hours.to_f / weeks.count.to_f).round(1) %>
               <% while(expected_hours >= 0) %>
                 <% expected_hours_for_week << expected_hours %>
                 <% expected_hours = (expected_hours - pass).round(1) %>

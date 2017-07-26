@@ -30,8 +30,11 @@
         </div>
 
         <div class="col-lg-6 col-sm-6">
-          <div class="img-reports">
-          </div>
+          <%= link_to reports_sprints_reports_path do %>
+            <div class="img-reports">
+              <%= image_tag 'relatorio de sprint.PNG' %>
+            </div>
+          <% end %>
           <br>
           <p class="description" style="text-align: justify; margin: 5px 10px;">
             Relatório de final de Sprint da dedicação relativa por usuário em

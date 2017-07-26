@@ -55,7 +55,7 @@
         <% if current_user_total? %>
           <hr style="border-top-color: dimgray">
 
-          <% if ['reports', 'reports/weeks_reports'].include? params[:controller] %>
+          <% if ['reports', 'reports/weeks_reports', 'reports/sprints_reports'].include? params[:controller] %>
             <% r_path = params[:controller] %>
           <% else %>
             <% r_path = 'projects' %>

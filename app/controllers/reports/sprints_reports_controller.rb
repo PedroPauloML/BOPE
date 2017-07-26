@@ -9,7 +9,7 @@ class Reports::SprintsReportsController < ReportsController
                disposition: "inline",
                template: "reports/sprints_reports/relative_dedication.html.erb",
                orientation: 'Landscape',
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@project => Project.find(params[:project]),
                          :@sprint => Sprint.find(params[:sprint]),
                          :@observation => params[:observation] },
@@ -18,7 +18,7 @@ class Reports::SprintsReportsController < ReportsController
       end
       format.html do
         render template: "reports/sprints_reports/relative_dedication.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@project => Project.find(params[:project]),
                          :@sprint => Sprint.find(params[:sprint]),
                          :@observation => params[:observation] }
@@ -33,14 +33,14 @@ class Reports::SprintsReportsController < ReportsController
                disposition: "inline",
                template: "reports/sprints_reports/activities_list.html.erb",
                orientation: 'Landscape',
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@sprint => Sprint.find(params[:sprint]) },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/sprints_reports/activities_list.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@sprint => Sprint.find(params[:sprint]) }
        end
     end
@@ -53,7 +53,7 @@ class Reports::SprintsReportsController < ReportsController
                disposition: "inline",
                template: "reports/sprints_reports/advance_and_completeness.html.erb",
                orientation: 'Landscape',
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@project => Project.find(params[:project]),
                          :@sprint => Sprint.find(params[:sprint]) },
                page_size: 'A4',
@@ -61,7 +61,7 @@ class Reports::SprintsReportsController < ReportsController
       end
       format.html do
         render template: "reports/sprints_reports/advance_and_completeness.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@project => Project.find(params[:project]),
                          :@sprint => Sprint.find(params[:sprint]) }
        end
@@ -74,14 +74,14 @@ class Reports::SprintsReportsController < ReportsController
         render pdf: "report_#{Sprint.find(params[:sprint]).description}",
                disposition: "inline",
                template: "reports/sprints_reports/team_monitoring.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@sprint => Sprint.find(params[:sprint]) },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/sprints_reports/team_monitoring.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@sprint => Sprint.find(params[:sprint]) }
        end
     end

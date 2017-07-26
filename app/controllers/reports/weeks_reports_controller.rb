@@ -11,7 +11,7 @@ class Reports::WeeksReportsController < ReportsController
                disposition: "inline",
                template: "reports/weeks_reports/relative_dedication.html.erb",
                orientation: 'Landscape',
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@project => Project.find(params[:project]),
                          :@sprint => Sprint.find(params[:sprint]),
                          :@observation => params[:observation] },
@@ -20,7 +20,7 @@ class Reports::WeeksReportsController < ReportsController
       end
       format.html do
         render template: "reports/weeks_reports/relative_dedication.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@project => Project.find(params[:project]),
                          :@sprint => Sprint.find(params[:sprint]),
                          :@observation => params[:observation] }
@@ -34,14 +34,14 @@ class Reports::WeeksReportsController < ReportsController
         render pdf: "report_#{Sprint.find(params[:sprint]).description}",
                disposition: "inline",
                template: "reports/weeks_reports/team_monitoring.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@sprint => Sprint.find(params[:sprint]) },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/weeks_reports/team_monitoring.html.erb",
-               layout: "reports/weeks_reports",
+               layout: "report_pdf",
                locals: { :@sprint => Sprint.find(params[:sprint]) }
        end
     end
