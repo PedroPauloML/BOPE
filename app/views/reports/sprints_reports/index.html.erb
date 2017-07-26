@@ -90,7 +90,8 @@
             </div>
           </div>
 
-        <% elsif (params[:report_kind] == '2') %>
+        <% elsif ((params[:report_kind] == '2') ||
+                  (params[:report_kind] == '4')) %>
 
           <div class="col-lg-4 col-sm-6 col-xs-6">
             <div class="select-user">
@@ -119,7 +120,8 @@
 
       <% if (params[:report_kind] == '1' && params[:project].present?) ||
             (params[:report_kind] == '2') ||
-            (params[:report_kind] == '3' && params[:project].present?) %>
+            (params[:report_kind] == '3' && params[:project].present?) ||
+            (params[:report_kind] == '4') %>
         <button id="buscar" class="btn btn-success pull-right" onclick="buscarRelatorio()">Buscar</button>
       <% else %>
         <button class="btn btn-success pull-right" disabled="disabled">Buscar</button>
@@ -138,6 +140,8 @@
           <%= render partial: 'reports/sprints_reports/shared/chart_to_activities_list' %>
         <% elsif params[:report_kind] == '3' %>
           <%= render partial: 'reports/sprints_reports/shared/chart_to_advance_and_completeness' %>
+        <% elsif params[:report_kind] == '4' %>
+          <%= render partial: 'reports/sprints_reports/shared/chart_to_team_monitoring' %>
         <% end %>
 
       <% else %>
@@ -177,7 +181,7 @@
           var url = "/reports/sprints_reports/?report_kind=" + report_kind.value + "&project=" + project_id.value + "&sprint=" + sprint_id.value;
           window.location.replace(url);
 
-        } else if (report_kind.value == '2') {
+        } else if ((report_kind.value == '2') || report_kind.value == '4') {
 
           var url = "/reports/sprints_reports/?report_kind=" + report_kind.value + "&sprint=" + sprint_id.value;
           window.location.replace(url);
@@ -227,7 +231,8 @@
         var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
         window.location.replace(url);
 
-      } else if ($("#report_kind")[0].value == '2') {
+      } else if (($("#report_kind")[0].value == '2') ||
+                 ($("#report_kind")[0].value == '4')) {
 
         var sprint_id = $("#sprint_id")[0];
         sprint_id.setAttribute("disabled", "disabled");
@@ -252,4 +257,6 @@
   <%= render partial: 'reports/sprints_reports/shared/zingchart_to_activities_list' %>
 <% elsif params[:report_kind] == '3' %>
   <%= render partial: 'reports/sprints_reports/shared/zingchart_to_advance_and_completeness' %>
+<% elsif params[:report_kind] == '4' %>
+  <%= render partial: 'reports/sprints_reports/shared/zingchart_to_team_monitoring' %>
 <% end %>
