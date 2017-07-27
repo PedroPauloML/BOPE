@@ -13,8 +13,6 @@ Rails.application.routes.draw do
   resources :statuses, except: [:show]
   resources :macro_activities, except: [:index, :show]
   resources :progresses, except: [:show, :edit, :update]
-  get '/progresses/graphic' => 'progresses#graphic'
-  get '/progresses/report_pdf', to: 'progresses#report_pdf', as: 'progress_report_pdf'
   resources :weeks, only: [:edit, :update]
 
 

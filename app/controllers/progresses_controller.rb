@@ -53,30 +53,6 @@ class ProgressesController < ApplicationController
     end
   end
 
-  def graphic
-    @project = Project.find(params[:project])
-  end
-
-  def report_pdf
-    respond_to do |format|
-      format.pdf do
-        render pdf: "report #{params[:project_id]}",
-               disposition: "inline",
-               orientation: 'Landscape',
-               template: "reports/pdf.html.erb",
-               layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project]) },
-               page_size: 'A4',
-               encoding: 'utf8'
-      end
-      format.html do
-        render template: "reports/pdf",
-               layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project]) }
-       end
-    end
-  end
-
   private
 
   def progress_params

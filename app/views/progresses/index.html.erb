@@ -97,19 +97,8 @@
         <%= link_to t('buttons.new'), new_progress_path(project: @project), class: 'btn btn-primary' %> |
       <% end %>
 
-      <% if can? :manage, Progress %>
-        <%= link_to "Gráfico de C&A", progresses_graphic_path(project: @project), class: "btn btn-info" %> |
-      <% end %>
-
-      <%#= link_to t('buttons.back'), nil, class: "btn btn-success", onclick: 'goBack()' %>
       <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-success" %>
 
     </div>
   </div>
 </div>
-
-<!-- <script>
-  function goBack() {
-    window.history.back();
-  }
-</script> -->
