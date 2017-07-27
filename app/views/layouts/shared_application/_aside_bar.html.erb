@@ -19,7 +19,7 @@
 
         <% if ['projects', 'sprints', 'activities', 'progresses',
                'macro_activities'].include? params[:controller] %>
-          <% path = params[:controller] %>
+          <% p_path = params[:controller] %>
         <% else %>
           <% p_path = 'projects' %>
         <% end %>
@@ -57,8 +57,6 @@
 
           <% if ['reports', 'reports/weeks_reports', 'reports/sprints_reports'].include? params[:controller] %>
             <% r_path = params[:controller] %>
-          <% else %>
-            <% r_path = 'projects' %>
           <% end %>
 
           <li class=<%= aside_bar_active("#{r_path}") %>>

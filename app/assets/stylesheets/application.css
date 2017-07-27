@@ -25,6 +25,11 @@
     }
 }
 
+.panel-primary > .panel-heading {
+    background-color: #711834 !important;
+    border-color: #711834 !important;
+}
+
 .centered {
     display: flex;
     align-items: center;
@@ -162,7 +167,7 @@ th, td {
 .nav-pills > li.active > a:focus,
 .asidebar-content-active .active {
     color: #ffffff;
-    background-color: #2a9fd6 !important;
+    background-color: #711834 !important;
     border-radius: 5px;
 }
 .nav-pills > li > a:hover {
