@@ -12,7 +12,11 @@ class ProgressesController < ApplicationController
       @completeness += ma.completeness.to_f
     end
     @completeness = @completeness / MacroActivity.where(project_id: @project.id).count
-    @advance = @completeness - @project.progresses.last.completeness.to_f
+    if @project.progresses.present?
+      @advance = @completeness - @project.progresses.last.completeness.to_f
+    else
+      @advance = @completeness
+    end
   end
 
   def create

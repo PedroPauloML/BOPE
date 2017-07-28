@@ -21,3 +21,40 @@ UserProfile.create!(
 )
 
 puts "Gerando USUÁRIO PADRÃO... [OK]"
+
+puts "Gerando as CORES..."
+
+colors = colors_name
+colors.each do |color|
+  Color.create!(
+    description: color
+  )
+end
+
+puts "Gerando as CORES... [OK]"
+
+puts "Gerando os RÓTULOS..."
+
+labels = labels_name
+
+labels.each do |name, color|
+  Label.create!(
+    description: name,
+    color_id: Color.where(description: color).first.id
+  )
+end
+
+puts "Gerando os RÓTULOS... [OK]"
+
+puts "Gerando os STATUS..."
+
+status_color = status_name_color
+
+status_color.each do |status, color|
+  Status.create!(
+    description: status,
+    color_id: Color.where(description: color).first.id
+  )
+end
+
+puts "Gerando os STATUS... [OK]"

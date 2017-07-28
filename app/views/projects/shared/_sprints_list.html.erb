@@ -93,7 +93,7 @@
 <% if current_user_total? %>
   <% if can? :create, Sprint %>
     <%= link_to "Nova Sprint", new_sprint_path(project: @project), class: "btn btn-default" %> |
-    <%= link_to "Nova Atividade", new_activity_path(project: @project), class: "btn btn-warning" %>
+    <%= link_to "Nova Atividade", new_activity_path(project: @project), class: "btn btn-default" %>
   <% end %>
 <% else %>
   <%= link_to "Nova Atividade", new_activity_path(project: @project), class: "btn btn-default" %>

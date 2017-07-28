@@ -53,7 +53,7 @@
 
               <% values = [] %>
 
-              <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+              <% User.all.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
                 <% hours_performed = 0 %>
 
@@ -75,6 +75,8 @@
                 <% avg_lab += v %>
               <% end %>
               <% values << (avg_lab / values.count).round(1) %>
+
+              <% values = values.map { |v| v.nan? ? 0 : v } %>
 
               {
                 "values": <%= values %>,

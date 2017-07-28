@@ -49,7 +49,9 @@
               <div class="col-lg-6">
                 <%= f.select(:status_id,
                         Status.where.not(description: 'Validado').order(:description).collect {|s| [ s.description, s.id ] },
-                        {selected: Status.where(description: 'Não iniciada').first.id},
+                        {selected: Status.where(description: 'Não iniciada'). present? ?
+                          Status.where(description: 'Não iniciada').first.id :
+                          ''},
                         {class: "form-control"}) %>
               </div>
             </div>
