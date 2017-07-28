@@ -12,7 +12,7 @@
       <ul class="breadcrumb">
         <div class="row">
 
-          <div class="col-lg-5 col-sm-5 col-xs-5">
+          <div class="col-lg-5 col-sm-5">
             <li><%= link_to "Projeto", project_path(@project) %></li>
             <li class="active">Sprint</li>
           </div>
@@ -262,17 +262,17 @@
 
       </table>
 
-      <%= link_to t('buttons.new'), new_activity_path(project: @project.id, sprint: @sprint.id), class: "btn btn-primary" %>
+      <%= link_to t('buttons.new'), new_activity_path(project: @project.id, sprint: @sprint.id), class: "btn btn-default" %>
 
       <center><%= paginate @activities %></center>
 
       <br><br>
 
       <% if can? :update, Sprint %>
-        <%= link_to t('buttons.edit'), edit_sprint_path(@sprint, project: @project), class: "btn btn-primary" %> |
+        <%= link_to t('buttons.edit'), edit_sprint_path(@sprint, project: @project), class: "btn btn-default" %> |
       <% end %>
 
-      <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-success" %>
+      <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-default" %>
 
     </div>
 

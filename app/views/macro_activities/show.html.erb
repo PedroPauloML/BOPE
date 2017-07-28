@@ -37,7 +37,7 @@
 
       </div>
 
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newProgress">
+      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#newProgress">
         Novo progresso
       </button>
 
@@ -45,11 +45,11 @@
 
       <% if can? :update, MacroActivity %>
         <td width="100" align="center">
-          <%= link_to t('buttons.edit'), edit_macro_activity_path(@macro_activity), class: "btn btn-primary" %> |
+          <%= link_to t('buttons.edit'), edit_macro_activity_path(@macro_activity), class: "btn btn-default" %> |
         </td>
       <% end %>
 
-      <%= link_to t('buttons.back'), project_path(@macro_activity.project), class: "btn btn-success" %>
+      <%= link_to t('buttons.back'), project_path(@macro_activity.project), class: "btn btn-default" %>
 
     </div>
 

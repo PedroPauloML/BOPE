@@ -25,9 +25,13 @@
     }
 }
 
-.panel-primary > .panel-heading {
-    background-color: #711834 !important;
-    border-color: #711834 !important;
+.panel-primary > .panel-heading, .btn-default {
+    background-color: #511834 !important;
+    border-color: #511834 !important;
+}
+.btn-default:hover {
+    background-color: rgba(121, 24, 52, 1) !important;
+    border-color: rgba(121, 24, 52, 1) !important;
 }
 
 .centered {
@@ -167,11 +171,14 @@ th, td {
 .nav-pills > li.active > a:focus,
 .asidebar-content-active .active {
     color: #ffffff;
-    background-color: #711834 !important;
+    background-color: #511834 !important;
     border-radius: 5px;
 }
-.nav-pills > li > a:hover {
+.nav-pills > li > a.aside:hover, ul.dropdown-menu > li > a:hover {
     background-color: #3e3b3b !important;
+}
+.nav-pills > li.active > a.aside:hover {
+    background-color: #511834 !important;
 }
 
 /* Alinhar div do formulário do Devise no meio */

@@ -4,17 +4,17 @@
       <ul class="nav nav-pills nav-stacked">
 
         <li class=<%= aside_bar_active('home') %>>
-          <%= link_to t('buttons.home'), root_path %>
+          <%= link_to t('buttons.home'), root_path, class: 'aside' %>
         </li>
 
         <% if current_user_total? %>
           <li class=<%= aside_bar_active('user_profile') %>>
-            <%= link_to "Usuários", user_profile_index_path %>
+            <%= link_to "Usuários", user_profile_index_path, class: 'aside' %>
           </li>
         <% end %>
 
         <li class=<%= aside_bar_active(params[:controller] == 'team_users' ? 'team_users' : 'teams') %>>
-          <%= link_to "Equipes", teams_path %>
+          <%= link_to "Equipes", teams_path, class: 'aside' %>
         </li>
 
         <% if ['projects', 'sprints', 'activities', 'progresses',
@@ -25,7 +25,7 @@
         <% end %>
 
         <li class=<%= aside_bar_active("#{p_path}") %>>
-          <%= link_to projects_path do %>
+          <%= link_to projects_path, class: 'aside' do %>
             Projetos
           <% end %>
         </li>
@@ -36,19 +36,19 @@
 
         <% if can? :manage, Label %>
           <li class=<%= aside_bar_active('labels') %>>
-            <%= link_to "Rótulos", labels_path %>
+            <%= link_to "Rótulos", labels_path, class: 'aside' %>
           </li>
         <% end %>
 
         <% if can? :manage, Color %>
           <li class=<%= aside_bar_active('colors') %>>
-            <%= link_to "Cores", colors_path %>
+            <%= link_to "Cores", colors_path, class: 'aside' %>
           </li>
         <% end %>
 
         <% if can? :manage, Status %>
           <li class=<%= aside_bar_active('statuses') %>>
-            <%= link_to "Status", statuses_path %>
+            <%= link_to "Status", statuses_path, class: 'aside' %>
           </li>
         <% end %>
 
@@ -60,7 +60,7 @@
           <% end %>
 
           <li class=<%= aside_bar_active("#{r_path}") %>>
-            <%= link_to "Relatórios", reports_path %>
+            <%= link_to "Relatórios", reports_path, class: 'aside' %>
           </li>
         <% end %>
 

@@ -14,9 +14,9 @@
       <br><br><br>
 
       <% if can? :update, Label %>
-        <%= link_to t('buttons.edit'), edit_label_path(@label), class: "btn btn-primary" %> |
+        <%= link_to t('buttons.edit'), edit_label_path(@label), class: "btn btn-default" %> |
       <% end %>
-      <%= link_to t('buttons.back'), labels_path, class: "btn btn-success" %>
+      <%= link_to t('buttons.back'), labels_path, class: "btn btn-default" %>
 
     </div>
 

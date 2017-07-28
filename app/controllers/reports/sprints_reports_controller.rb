@@ -5,13 +5,12 @@ class Reports::SprintsReportsController < ReportsController
   def relative_dedication
     respond_to do |format|
       format.pdf do
-        render pdf: "report_#{Project.find(params[:project]).description}",
+        render pdf: "report",
                disposition: "inline",
                template: "reports/sprints_reports/relative_dedication.html.erb",
                orientation: 'Landscape',
                layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project]),
-                         :@sprint => Sprint.find(params[:sprint]),
+               locals: { :@sprint => Sprint.find(params[:sprint]),
                          :@observation => params[:observation] },
                page_size: 'A4',
                encoding: 'utf8'
@@ -19,8 +18,7 @@ class Reports::SprintsReportsController < ReportsController
       format.html do
         render template: "reports/sprints_reports/relative_dedication.html.erb",
                layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project]),
-                         :@sprint => Sprint.find(params[:sprint]),
+               locals: { :@sprint => Sprint.find(params[:sprint]),
                          :@observation => params[:observation] }
        end
     end

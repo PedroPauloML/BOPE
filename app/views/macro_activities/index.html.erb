@@ -41,13 +41,13 @@
 
           <% if can? :update, MacroActivity %>
             | <td width="100" align="center">
-              <%= link_to t('buttons.edit'), edit_macro_activity_path(ma), class: "btn btn-primary" %> |
+              <%= link_to t('buttons.edit'), edit_macro_activity_path(ma), class: "btn btn-default" %> |
             </td>
           <% end %>
 
           <% if can? :destroy, MacroActivity %>
             <td width="100">
-              <%= link_to t('buttons.destroy'), macro_activity_path(ma), method: :delete, data: { confirm: t('messages.confirm') }, class: "btn btn-danger" %>
+              <%= link_to t('buttons.destroy'), macro_activity_path(ma), method: :delete, data: { confirm: t('messages.confirm') }, class: "btn btn-default" %>
             </td>
           <% end %>
 
@@ -63,7 +63,7 @@
 
       <br><br><br><br>
 
-      <%= link_to t('buttons.back'), projects_path, class: "btn btn-success" %>
+      <%= link_to t('buttons.back'), projects_path, class: "btn btn-default" %>
 
     </div>
 

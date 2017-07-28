@@ -57,7 +57,7 @@
       <center><%= paginate @activities %></center>
 
       <% if can? :create, Activity %>
-        <%= link_to t('buttons.new'), new_activity_path, class: "btn btn-primary" %>
+        <%= link_to t('buttons.new'), new_activity_path, class: "btn btn-default" %>
       <% end %>
 
     </div>

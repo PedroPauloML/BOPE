@@ -121,11 +121,11 @@
           </fieldset>
         </div>
 
-        <%= f.submit t('buttons.save'), class: "btn btn-primary" %> |
+        <%= f.submit t('buttons.save'), class: "btn btn-default" %> |
         <% if @sprint.present? %>
-          <%= link_to t('buttons.back'), sprint_path(@sprint, project: @project), class: "btn btn-success" %>
+          <%= link_to t('buttons.back'), sprint_path(@sprint, project: @project), class: "btn btn-default" %>
         <% else %>
-          <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-success" %>
+          <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-default" %>
         <% end %>
 
       <% end %>

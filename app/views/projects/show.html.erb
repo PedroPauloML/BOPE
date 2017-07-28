@@ -12,7 +12,7 @@
       <ul class="breadcrumb">
         <div class="row">
 
-          <div class="col-lg-5 col-sm-5 col-xs-5">
+          <div class="col-lg-5 col-sm-5">
             <li><%= link_to "Projetos", projects_path %></li>
           </div>
 
@@ -47,11 +47,11 @@
 
       <% if can? :update, Project %>
         <td width="100" align="center">
-          <%= link_to t('buttons.edit'), edit_project_path(@project), class: "btn btn-primary" %> |
+          <%= link_to t('buttons.edit'), edit_project_path(@project), class: "btn btn-default" %> |
         </td>
       <% end %>
 
-      <%= link_to t('buttons.back'), projects_path, class: "btn btn-success" %>
+      <%= link_to t('buttons.back'), projects_path, class: "btn btn-default" %>
 
     </div>
 

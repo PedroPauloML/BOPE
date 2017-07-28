@@ -2,10 +2,9 @@
   window.onload = function() {
 
     <% hr_users = [] %>
-    <% project = Project.find(params[:project]) if params[:project].present? %>
     <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
 
-    <% if project.present? && sprint.present? %>
+    <% if sprint.present? %>
 
       zingchart.render({
         id: "chart",
@@ -32,7 +31,7 @@
             }
           },
           "scale-x": {
-            <% labels = project.team.users.includes(:user_profile)
+            <% labels = User.all.includes(:user_profile)
                         .order("user_profiles.name")
                         .collect { |u| u.user_profile.name } %>
             <% labels << 'Lab.' %>
@@ -65,12 +64,20 @@
 
               <% values = [] %>
 
-              <% w.hours_registries.joins(user: [:user_profile])
-                 .order('user_profiles.name')
-                 .where(project_id: project.id).each do |hr| %>
+              <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
-                <% values << ((hr.hours_performed * 100) /
-                              (w.expected_hours.to_f * 3600)).round(1) %>
+                <% hours_performed = 0 %>
+
+                <% w.hours_registries.where(user_id: u.id).each do |hr| %>
+
+                  <% hours_performed += hr.hours_performed %>
+
+                <% end %>
+
+                <% values << ((hours_performed * 100) /
+                              ((w.expected_hours.to_f * 3600) *
+                                w.hours_registries.where(user_id: u.id).count)
+                             ).round(1) %>
 
               <% end %>
 

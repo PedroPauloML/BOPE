@@ -94,10 +94,10 @@
       <br><br>
 
       <% if can? :create, Progress %>
-        <%= link_to t('buttons.new'), new_progress_path(project: @project), class: 'btn btn-primary' %> |
+        <%= link_to t('buttons.new'), new_progress_path(project: @project), class: 'btn btn-default' %> |
       <% end %>
 
-      <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-success" %>
+      <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-default" %>
 
     </div>
   </div>

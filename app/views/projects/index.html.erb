@@ -127,7 +127,7 @@
       <center><%= paginate @projects %></center>
 
       <% if can? :create, Project %>
-        <%= link_to t('buttons.new'), new_project_path, class: "btn btn-primary" %>
+        <%= link_to t('buttons.new'), new_project_path, class: "btn btn-default" %>
       <% end %>
 
     </div>

@@ -3,12 +3,9 @@
   <p style="font-size: 8pt;text-align: justify;">
     * Integrantes da equipe:
 
-    <% last_u = Project.find(params[:project]).team.users
-               .joins(:user_profile).order("user_profiles.name")
-               .last %>
+    <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
 
-    <% Project.find(params[:project]).team.users.joins(:user_profile)
-       .order("user_profiles.name").each do |u| %>
+    <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
       <% unless u == last_u %>
         <%= u.user_profile.name %>,
@@ -33,5 +30,5 @@
   <%= hidden_field_tag 'project', params[:project] %>
   <%= hidden_field_tag 'sprint', params[:sprint] %>
 
-  <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-info', target: '_blank' %> |
+  <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-default', target: '_blank' %> |
 <% end %>

@@ -48,7 +48,7 @@
       <center><%= paginate @labels %></center>
 
       <% if can? :create, Label %>
-        <%= link_to t('buttons.new'), new_label_path, class: "btn btn-primary" %>
+        <%= link_to t('buttons.new'), new_label_path, class: "btn btn-default" %>
       <% end %>
 
     </div>

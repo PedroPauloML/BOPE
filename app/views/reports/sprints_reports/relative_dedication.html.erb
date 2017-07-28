@@ -9,11 +9,9 @@
 <p style="font-size: 8pt;text-align: justify;">
   * Integrantes da equipe:
 
-  <% last_u = @project.team.users.joins(:user_profile)
-              .order("user_profiles.name").last %>
+  <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
 
-  <% @project.team.users.joins(:user_profile).order("user_profiles.name")
-     .each do |u| %>
+  <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
     <% unless u == last_u %>
       <%= u.user_profile.name %>,
@@ -25,7 +23,33 @@
 </p>
 
 <p style="font-size: 8pt;text-align: justify;">
-  OBS.: <%= @observation %>
+
+  <% @sprint.weeks.each do |w| %>
+      Dedicação da <%= w.description.downcase %>, esperados
+      <%= w.expected_hours %> horas para os colaboradores
+
+      <% first_u = User.joins(:user_profile).order("user_profiles.name").first %>
+      <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+        <% w_count = 0 %>
+        <% w_count = w.hours_registries.where(user_id: u.id).count %>
+
+          <% if w_count > 1 %>
+            <% if u == first_u %>
+              e <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
+            <% else %>
+              , <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
+            <% end %>
+          <% end %>
+      <% end %>
+
+    .<br>
+  <% end %>
+
+  <% if @observation.present? %>
+    <br>
+    OBS.:
+    <%= @observation %>
+  <% end %>
 </p>
 
 <%= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_dedication' %>

@@ -54,7 +54,7 @@
       <center><%= paginate @teams %></center>
 
       <% if can? :create, Team %>
-        <%= link_to t('buttons.new'), new_team_path, class: "btn btn-primary" %>
+        <%= link_to t('buttons.new'), new_team_path, class: "btn btn-default" %>
       <% end %>
 
     </div>

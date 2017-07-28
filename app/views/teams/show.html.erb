@@ -73,10 +73,10 @@
         <br><br>
 
         <% if can? :update, Team %>
-          <%= link_to t('buttons.edit'), edit_team_path, class: "btn btn-primary" %> |
+          <%= link_to t('buttons.edit'), edit_team_path, class: "btn btn-default" %> |
           <%= submit_tag "Editar usuários da equipe", class: "btn btn-default" %> |
         <% end %>
-        <%= link_to t('buttons.back'),teams_path, class: "btn btn-success" %>
+        <%= link_to t('buttons.back'),teams_path, class: "btn btn-default" %>
 
       </div>
 
