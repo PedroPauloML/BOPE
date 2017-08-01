@@ -5,7 +5,6 @@
 
   <script>
     window.onload = function() {
-      <%# DEDICAÇÃO RELATIVA %>
       <% projects.each do |project| %>
 
         <% sprints = project.sprints.where(id: [1..sprint.id])

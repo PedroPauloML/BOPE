@@ -3,53 +3,57 @@
 <b>Desenvolvido por:</b> Lorena Souza Costa <br>
 <b>Data:</b> <%= l(Time.zone.today) %> <br>
 
+<% Project.all.order(:description).each do |p| %>
+  <div id="chart_<%= p.id %>" style="width: 1000px"></div>
 
-<div id="chart" style="width: 1000px"></div>
+  <p style="font-size: 8pt;text-align: justify;">
+    * Integrantes da equipe:
 
-<p style="font-size: 8pt;text-align: justify;">
-  * Integrantes da equipe:
+    <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
 
-  <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
+    <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
-  <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
-
-    <% unless u == last_u %>
-      <%= u.user_profile.name %>,
-    <% else %>
-      <%= u.user_profile.name %>.
-    <% end %>
-
-  <% end %>
-</p>
-
-<p style="font-size: 8pt;text-align: justify;">
-
-  <% @sprint.weeks.each do |w| %>
-      Dedicação da <%= w.description.downcase %>, esperados
-      <%= w.expected_hours %> horas para os colaboradores
-
-      <% first_u = User.joins(:user_profile).order("user_profiles.name").first %>
-      <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
-        <% w_count = 0 %>
-        <% w_count = w.hours_registries.where(user_id: u.id).count %>
-
-          <% if w_count > 1 %>
-            <% if u == first_u %>
-              e <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
-            <% else %>
-              , <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
-            <% end %>
-          <% end %>
+      <% unless u == last_u %>
+        <%= u.user_profile.name %>,
+      <% else %>
+        <%= u.user_profile.name %>.
       <% end %>
 
-    .<br>
-  <% end %>
+    <% end %>
+  </p>
 
-  <% if @observation.present? %>
-    <br>
+  <p style="font-size: 8pt;text-align: justify;">
+
+    <% @sprint.weeks.each do |w| %>
+        Dedicação da <%= w.description.downcase %>, esperados
+        <%= w.expected_hours %> horas para os colaboradores
+
+        <% first_u = p.team.users.joins(:user_profile).order("user_profiles.name").first %>
+        <% p.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
+          <% w_count = 0 %>
+          <% w_count = w.hours_registries.where(user_id: u.id).count %>
+
+            <% if w_count > 1 %>
+              <% if u == first_u %>
+                e <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
+              <% else %>
+                , <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
+              <% end %>
+            <% end %>
+        <% end %>
+
+      .<br>
+    <% end %>
+
+  </p>
+
+<% end %>
+
+<% if @observation.present? %>
+  <p style="font-size: 8pt;text-align: justify;">
     OBS.:
     <%= @observation %>
-  <% end %>
-</p>
+  </p>
+<% end %>
 
 <%= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_dedication' %>

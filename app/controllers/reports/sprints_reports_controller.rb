@@ -32,14 +32,16 @@ class Reports::SprintsReportsController < ReportsController
                template: "reports/sprints_reports/activities_list.html.erb",
                orientation: 'Landscape',
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]) },
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/sprints_reports/activities_list.html.erb",
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]) }
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] }
        end
     end
   end
@@ -47,21 +49,21 @@ class Reports::SprintsReportsController < ReportsController
   def advance_and_completeness
     respond_to do |format|
       format.pdf do
-        render pdf: "report_#{Project.find(params[:project]).description}",
+        render pdf: "report",
                disposition: "inline",
                template: "reports/sprints_reports/advance_and_completeness.html.erb",
                orientation: 'Landscape',
                layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project]),
-                         :@sprint => Sprint.find(params[:sprint]) },
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/sprints_reports/advance_and_completeness.html.erb",
                layout: "report_pdf",
-               locals: { :@project => Project.find(params[:project]),
-                         :@sprint => Sprint.find(params[:sprint]) }
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] }
        end
     end
   end
@@ -73,14 +75,16 @@ class Reports::SprintsReportsController < ReportsController
                disposition: "inline",
                template: "reports/sprints_reports/team_monitoring.html.erb",
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]) },
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/sprints_reports/team_monitoring.html.erb",
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]) }
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] }
        end
     end
   end

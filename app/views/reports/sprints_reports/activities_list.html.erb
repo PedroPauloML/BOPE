@@ -46,6 +46,16 @@
       <p>Nenhuma informação encontrada :'(</p><br>
     </div>
   <% end %>
+
+  <% if @observation.present? %>
+    <p style="font-size: 8pt;text-align: justify;">
+      OBS.:
+      <%= @observation %>
+    </p>
+  <% end %>
+
 <% end %>
+
+
 
 <%= render partial: 'reports/sprints_reports/shared/zingchart_to_activities_list' %>

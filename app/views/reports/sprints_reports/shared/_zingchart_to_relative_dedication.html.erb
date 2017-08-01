@@ -4,90 +4,94 @@
     <% hr_users = [] %>
     <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
 
-    <% if  sprint.present? %>
+    <% if sprint.present? %>
 
-      zingchart.render({
-        id: "chart",
-        data: {
-          "type": "bar",
-          "title": {
-            "text": "Dedicação Relativa"
-          },
-          "legend": {
-            "layout":"1x", //row x column
-            "position": "50% 10%",
-            "padding": "10%",
-            "adjust-layout": "true"
-          },
-          "plotarea": {
-            "margin-top": "10%",
-            "margin-bottom": "25%"
-          },
-          "plot": {
-            "value-box": {
-              "text":"%v%",
-              "angle": -90,
-              "padding-bottom": "5px"
-            }
-          },
-          "scale-x": {
-            <% labels = User.includes(:user_profile)
-                        .order("user_profiles.name")
-                        .collect { |u| u.user_profile.name } %>
-            <% labels << 'Lab.' %>
-            "labels": <%= raw labels %>,
-            "item": {
-              "font-size": "10pt",
-              "max-chars": 15,
-              "angle": -45
-            }
-          },
-          "scale-y": {
-            "values": "0:250:50",
-            "format":"%v%"
-          },
-          "series": [
-            <% w_count = 1 %>
+      <% Project.all.order(:description).each do |project| %>
 
-            <% sprint.weeks.each do |w| %>
+        zingchart.render({
+          id: "chart_<%= project.id %>",
+          data: {
+            "type": "bar",
+            "title": {
+              "text": "Dedicação Relativa"
+            },
+            "legend": {
+              "layout":"1x", //row x column
+              "position": "50% 10%",
+              "padding": "10%",
+              "adjust-layout": "true"
+            },
+            "plotarea": {
+              "margin-top": "10%",
+              "margin-bottom": "25%"
+            },
+            "plot": {
+              "value-box": {
+                "text":"%v%",
+                "angle": -90,
+                "padding-bottom": "5px"
+              }
+            },
+            "scale-x": {
+              <% labels = project.team.users.includes(:user_profile)
+                          .order("user_profiles.name")
+                          .collect { |u| u.user_profile.name } %>
+              <% labels << 'Lab.' %>
+              "labels": <%= raw labels %>,
+              "item": {
+                "font-size": "10pt",
+                "max-chars": 15,
+                "angle": -45
+              }
+            },
+            "scale-y": {
+              "values": "0:250:50",
+              "format":"%v%"
+            },
+            "series": [
+              <% w_count = 1 %>
 
-              <% values = [] %>
+              <% sprint.weeks.each do |w| %>
 
-              <% User.all.joins(:user_profile).order("user_profiles.name").each do |u| %>
+                <% values = [] %>
 
-                <% hours_performed = 0 %>
+                <% project.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
-                <% w.hours_registries.where(user_id: u.id).each do |hr| %>
+                  <% hours_performed = 0 %>
 
-                  <% hours_performed += hr.hours_performed %>
+                  <% w.hours_registries.where(user_id: u.id).each do |hr| %>
+
+                    <% hours_performed += hr.hours_performed %>
+
+                  <% end %>
+
+                  <% values << ((hours_performed * 100) /
+                                ((w.expected_hours.to_f * 3600) *
+                                  w.hours_registries.where(user_id: u.id).count)
+                               ).round(1) %>
 
                 <% end %>
 
-                <% values << ((hours_performed * 100) /
-                              ((w.expected_hours.to_f * 3600) *
-                                w.hours_registries.where(user_id: u.id).count)
-                             ).round(1) %>
+                <% avg_lab = 0 %>
+                <% values.each do |v| %>
+                  <% avg_lab += v %>
+                <% end %>
+                <% values << (avg_lab / values.count).round(1) %>
 
+                <% values = values.map { |v| v.nan? ? 0 : v } %>
+
+                {
+                  "values": <%= values %>,
+                  "text": "Semana <%= w_count %>"
+                },
+
+                <% w_count += 1 %>
               <% end %>
+            ]
+          }
+        });
 
-              <% avg_lab = 0 %>
-              <% values.each do |v| %>
-                <% avg_lab += v %>
-              <% end %>
-              <% values << (avg_lab / values.count).round(1) %>
-
-              <% values = values.map { |v| v.nan? ? 0 : v } %>
-
-              {
-                "values": <%= values %>,
-                "text": "Semana <%= w_count %>"
-              },
-
-              <% w_count += 1 %>
-            <% end %>
-          ]
-        }
-      });
+      <% end %>
 
     <% end %>
   };

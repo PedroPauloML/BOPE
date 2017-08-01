@@ -1,21 +1,23 @@
-<div class="chart">
-  <div id="chart"></div>
-  <p style="font-size: 8pt;text-align: justify;">
-    * Integrantes da equipe:
+<% Project.all.order(:description).each do |p| %>
+  <div class="chart">
+    <div id="chart_<%= p.id %>"></div>
+    <p style="font-size: 8pt;text-align: justify;">
+      * Integrantes da equipe:
 
-    <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
+      <% last_u = p.team.users.joins(:user_profile).order("user_profiles.name").last %>
 
-    <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+      <% p.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
-      <% unless u == last_u %>
-        <%= u.user_profile.name %>,
-      <% else %>
-        <%= u.user_profile.name %>.
+        <% unless u == last_u %>
+          <%= u.user_profile.name %>,
+        <% else %>
+          <%= u.user_profile.name %>.
+        <% end %>
+
       <% end %>
-
-    <% end %>
-  </p>
-</div>
+    </p>
+  </div>
+<% end %>
 
 <br>
 

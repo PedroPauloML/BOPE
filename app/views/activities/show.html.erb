@@ -58,7 +58,7 @@
       <% end %>
       <span class="title">Pontos planejados:</span> <%= @activity.pontos_cadastrados %> <br>
       <span class="title">Pontos realizados:</span> <%= @activity.pontos_atualizados %> <br>
-      <span class="title">Status:</span> <%= @activity.status.blank? ? '-' : @activity.status.description %> <br>
+      <span class="title">Estado:</span> <%= @activity.status.blank? ? '-' : @activity.status.description %> <br>
       <span class="title">Rótulo:</span> <%= @activity.label.blank? ? '-' : @activity.label.description %> <br>
       <span class="title">Projeto: </span> <%= @activity.project.description %> <br>
       <span class="title">Sprint:</span> <%= @activity.sprint.blank? ? '-' : "#{@activity.sprint.description} (#{@activity.sprint.semester})" %>

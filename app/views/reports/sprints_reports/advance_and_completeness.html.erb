@@ -3,25 +3,33 @@
 <b>Desenvolvido por:</b> Lorena Souza Costa <br>
 <b>Data:</b> <%= l(Time.zone.today) %> <br>
 
+<% Project.all.order(:description).each do |p| %>
 
-<div id="chart_<%= params[:project] %>" style="width: 1000px"></div>
+  <div id="chart_<%= p.id %>" style="width: 1000px"></div>
 
-<p style="font-size: 8pt;text-align: justify;">
-  * Integrantes da equipe:
+  <p style="font-size: 8pt;text-align: justify;">
+    * Integrantes da equipe:
 
-  <% last_u = Project.find(params[:project]).team.users
-             .joins(:user_profile).order("user_profiles.name").last %>
+    <% last_u = p.team.users.joins(:user_profile).order("user_profiles.name").last %>
 
-  <% Project.find(params[:project]).team.users.joins(:user_profile)
-     .order("user_profiles.name").each do |u| %>
+    <% p.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
-    <% unless u == last_u %>
-      <%= u.user_profile.name %>,
-    <% else %>
-      <%= u.user_profile.name %>.
+      <% unless u == last_u %>
+        <%= u.user_profile.name %>,
+      <% else %>
+        <%= u.user_profile.name %>.
+      <% end %>
+
     <% end %>
+  </p>
 
-  <% end %>
-</p>
+<% end %>
+
+<% if @observation.present? %>
+  <p style="font-size: 8pt;text-align: justify;">
+    OBS.:
+    <%= @observation %>
+  </p>
+<% end %>
 
 <%= render partial: 'reports/sprints_reports/shared/zingchart_to_advance_and_completeness' %>

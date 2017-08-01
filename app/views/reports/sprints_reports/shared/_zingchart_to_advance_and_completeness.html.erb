@@ -2,45 +2,47 @@
   window.onload = function() {
 
     <% hr_users = [] %>
-    <% project = Project.find(params[:project]) if params[:project].present? %>
     <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
 
-    <% if project.present? && sprint.present? %>
+    <% if sprint.present? %>
 
-      zingchart.render({
-        id: "chart_<%= project.id %>",
-        data: {
-          "type": "line",
-          "title": {
-            "text": "Avanço e Completude"
-          },
-          "legend": {
-            "layout":"1x", //row x column
-            "position": "50% 10%",
-            "padding": "10%",
-            "adjust-layout": "true"
-          },
-          "plotarea": {
-            "margin-top": "10%",
-            "margin-bottom": "25%"
-          },
-          "plot": {
-            "value-box": {
-              "text": "%node-value"
-            }
-          },
-          "series": [
-            {
-              "values": <%= raw project.progresses.order(:id).map { |p| [p.sprint.description, p.completeness.to_f] } %>,
-              "text": "Completude"
+      <% Project.all.order(:description).each do |project| %>
+
+        zingchart.render({
+          id: "chart_<%= project.id %>",
+          data: {
+            "type": "line",
+            "title": {
+              "text": "Avanço e Completude"
             },
-            {
-              "values": <%= raw project.progresses.order(:id).map { |p| [p.sprint.description, p.advance.to_f] } %>,
-              "text": "Avanço"
-            }
-          ]
-        }
-      });
+            "legend": {
+              "layout":"1x", //row x column
+              "position": "50% 10%",
+              "padding": "10%",
+              "adjust-layout": "true"
+            },
+            "plotarea": {
+              "margin-top": "10%",
+              "margin-bottom": "25%"
+            },
+            "plot": {
+              "value-box": {
+                "text": "%node-value"
+              }
+            },
+            "series": [
+              {
+                "values": <%= raw project.progresses.order(:id).map { |p| [p.sprint.description, p.completeness.to_f] } %>,
+                "text": "Completude"
+              },
+              {
+                "values": <%= raw project.progresses.order(:id).map { |p| [p.sprint.description, p.advance.to_f] } %>,
+                "text": "Avanço"
+              }
+            ]
+          }
+        });
+      <% end %>
     <% end %>
   };
 </script>

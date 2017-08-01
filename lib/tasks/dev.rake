@@ -385,26 +385,6 @@ end
     names = ['Azul', 'Vermelho', 'Amarelo', 'Preto']
   end
 
-  def colors_name
-    colors = ["#ff5e00", "#7a00cc", "#7d0746", "#b3cf00", "#04b81c", "#171061",
-              "#b05500", "#ff0000","#7c8f00","#065e00", "#0009ff", "#616161"]
-  end
-
-  def status_name_color
-    status_color = [["Não iniciada", "#7c8f00"],
-                    ["Em andamento", "#065e00"],
-                    ["Validado", "#0009ff"],
-                    ["Aguardando validação", "#616161"]]
-  end
-
-  def labels_name
-    labels = [["Bug","#ff0000"],["Cancelado","#b05500"],
-              ["Documentação","#0009ff"],["Funcionalidade","#171061"],
-              ["Melhoria","#04b81c"],["Operacional","#b3cf00"],
-              ["Pendente","#7d0746"],["Pesquisa","#7a00cc"],
-              ["Teste","#ff5e00"]]
-  end
-
   def macro_activities_names
     man = ["Macro Atv. 1", "Macro Atv. 2", "Macro Atv. 3",
            "Macro Atv. 4", "Macro Atv. 5"]

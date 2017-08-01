@@ -25,6 +25,18 @@
     }
 }
 
+.lead {
+    font-size: 18px !important;
+}
+
+.logo-header {
+    height: 80px;
+    background-color: white;
+    padding: 8px;
+    border-radius: 5px;
+    margin-right: 113px;
+}
+
 .panel-primary > .panel-heading,
 .btn-default,
 .progress-bar, .dropdown-menu > li > a:hover,
@@ -178,11 +190,11 @@ th, td {
     background-color: #511834 !important;
     border-radius: 5px;
 }
-.nav-pills > li > a.aside:hover, ul.dropdown-menu > li > a:hover {
-    background-color: #3e3b3b !important;
-}
 .nav-pills > li.active > a.aside:hover {
     background-color: #511834 !important;
+}
+.nav-pills > li > a.aside:hover, ul.dropdown-menu > li > a:hover {
+    background-color: #3e3b3b !important;
 }
 
 /* Alinhar div do formulário do Devise no meio */

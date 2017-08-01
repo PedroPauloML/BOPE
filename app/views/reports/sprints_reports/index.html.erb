@@ -44,33 +44,6 @@
 
       <div class="row">
         <div class="col-lg-8 col-sm-6 col-xs-6">
-          <span class="title">Relatório para o projeto:</span>
-        </div>
-
-        <% if ((params[:report_kind] == '3')) %>
-          <div class="col-lg-4 col-sm-6 col-xs-6">
-            <div class="select-user">
-              <%= select(:project, "id",
-                         Project.all.order(:description).collect {|p| [ p.description, p.id ] },
-                         {selected: "#{params[:project].present? ? params[:project] : ''}", include_blank: "-- Nome do projeto --"},
-                         {class: 'form-control'}) %>
-            </div>
-          </div>
-        <% else %>
-          <div class="col-lg-4 col-sm-6 col-xs-6">
-            <div class="select-user">
-              <%= select(:project, "id", "",
-                         {include_blank: "-- Nome do projeto --"},
-                         {class: 'form-control', disabled: true}) %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-
-      <br>
-
-      <div class="row">
-        <div class="col-lg-8 col-sm-6 col-xs-6">
           <span class="title">Relatório para a sprint:</span>
         </div>
 
@@ -90,6 +63,7 @@
         <% elsif ((!params[:report_kind].present?) ||
                   (params[:report_kind] == '1') ||
                   (params[:report_kind] == '2') ||
+                  (params[:report_kind] == '3') ||
                   (params[:report_kind] == '4')) %>
 
           <div class="col-lg-4 col-sm-6 col-xs-6">
@@ -120,7 +94,7 @@
       <% if (!params[:report_kind].present?) ||
             (params[:report_kind] == '1') ||
             (params[:report_kind] == '2') ||
-            (params[:report_kind] == '3' && params[:project].present?) ||
+            (params[:report_kind] == '3') ||
             (params[:report_kind] == '4') %>
         <button id="buscar" class="btn btn-default pull-right" onclick="buscarRelatorio()">Buscar</button>
       <% else %>
@@ -130,9 +104,8 @@
       <br><br><br>
 
       <!-- .chart -->
-      <% if (params[:report_kind].present? && params[:project].present? &&
-             params[:sprint].present?) ||
-            (params[:report_kind].present? && params[:sprint].present?) %>
+      <% if ((params[:sprint].present?) ||
+             (params[:report_kind].present? && params[:sprint].present?)) %>
 
         <% if params[:report_kind] == '1' %>
           <%= render partial: 'reports/sprints_reports/shared/chart_to_relative_dedication' %>
@@ -152,7 +125,7 @@
         </div>
 
       <% end %>
-      <!-- / .chart -->
+      <!-- /.chart -->
 
       <%= link_to t('buttons.back'), reports_path, class: "btn btn-default" %>
 
@@ -168,36 +141,20 @@
     var sprint_id = $("#sprint_id")[0];
     var report_kind = $("#report_kind")[0];
 
-    if ((!project_id.value == "") || (project_id.hasAttribute("disabled"))){
+    if (!sprint_id.value == "") {
 
-      project_id.removeAttribute("style");
+      sprint_id.removeAttribute("style");
 
-      if (!sprint_id.value == "") {
+      if ((report_kind.value == '1') || (report_kind.value == '2') ||
+          (report_kind.value == '3') || (report_kind.value == '4')) {
 
-        sprint_id.removeAttribute("style");
+        var url = "/reports/sprints_reports/?report_kind=" + report_kind.value + "&sprint=" + sprint_id.value;
+        window.location.replace(url);
 
-        if ((report_kind.value == '3')) {
-
-          var url = "/reports/sprints_reports/?report_kind=" + report_kind.value + "&project=" + project_id.value + "&sprint=" + sprint_id.value;
-          window.location.replace(url);
-
-        } else if ((report_kind.value == '1') || (report_kind.value == '2') ||
-                   (report_kind.value == '4')) {
-
-          var url = "/reports/sprints_reports/?report_kind=" + report_kind.value + "&sprint=" + sprint_id.value;
-          window.location.replace(url);
-
-        }
-
-      } else {
-        sprint_id.setAttribute("style", "box-shadow: 0 0 20px red");
       }
+
     } else {
-      project_id.setAttribute("style", "box-shadow: 0 0 20px red");
-
-      if (sprint_id.value == "") {
-        sprint_id.setAttribute("style", "box-shadow: 0 0 20px red");
-      }
+      sprint_id.setAttribute("style", "box-shadow: 0 0 20px red");
     }
   }
 
@@ -206,49 +163,49 @@
     $('#observation')[0].value = input.value;
   }
 
-  $(function(){
-    $('#project_id').bind('change', function () {
-      var sprint_id = $("#sprint_id")[0];
-      sprint_id.setAttribute("disabled", "disabled");
-      var project_id = $("#project_id")[0];
-      var report_kind = $("#report_kind")[0];
-      var url = "/reports/sprints_reports/?report_kind=" + report_kind.value +"&project=" + project_id.value;
-      window.location.replace(url);
-    });
+  // $(function(){
+  //   $('#project_id').bind('change', function () {
+  //     var sprint_id = $("#sprint_id")[0];
+  //     sprint_id.setAttribute("disabled", "disabled");
+  //     var project_id = $("#project_id")[0];
+  //     var report_kind = $("#report_kind")[0];
+  //     var url = "/reports/sprints_reports/?report_kind=" + report_kind.value +"&project=" + project_id.value;
+  //     window.location.replace(url);
+  //   });
 
-    $('#report_kind').bind('change', function () {
+  //   $('#report_kind').bind('change', function () {
 
-      if (($("#report_kind")[0].value == '3')) {
-        var sprint_id = $("#sprint_id")[0];
-        sprint_id.setAttribute("disabled", "disabled");
-        var project_id = $("#project_id")[0];
-        project_id.removeAttribute("disabled");
-        project_id.setAttribute("disabled", "disabled");
-        var button = $("#buscar")[0];
-        if (!(button == undefined)){
-          button.setAttribute("disabled", "disabled");
-        }
-        var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
-        window.location.replace(url);
+  //     if (($("#report_kind")[0].value == '3')) {
+  //       var sprint_id = $("#sprint_id")[0];
+  //       sprint_id.setAttribute("disabled", "disabled");
+  //       var project_id = $("#project_id")[0];
+  //       project_id.removeAttribute("disabled");
+  //       project_id.setAttribute("disabled", "disabled");
+  //       var button = $("#buscar")[0];
+  //       if (!(button == undefined)){
+  //         button.setAttribute("disabled", "disabled");
+  //       }
+  //       var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
+  //       window.location.replace(url);
 
-      } else if (($("#report_kind")[0].value == '1') ||
-                 ($("#report_kind")[0].value == '2') ||
-                 ($("#report_kind")[0].value == '4')) {
+  //     } else if (($("#report_kind")[0].value == '1') ||
+  //                ($("#report_kind")[0].value == '2') ||
+  //                ($("#report_kind")[0].value == '4')) {
 
-        var sprint_id = $("#sprint_id")[0];
-        sprint_id.setAttribute("disabled", "disabled");
-        var project_id = $("#project_id")[0];
-        project_id.setAttribute("disabled", "disabled");
-        var button = $("#buscar")[0];
-        if (!(button == undefined)){
-          button.setAttribute("disabled", "disabled");
-        }
-        var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
-        window.location.replace(url);
-      }
+  //       var sprint_id = $("#sprint_id")[0];
+  //       sprint_id.setAttribute("disabled", "disabled");
+  //       var project_id = $("#project_id")[0];
+  //       project_id.setAttribute("disabled", "disabled");
+  //       var button = $("#buscar")[0];
+  //       if (!(button == undefined)){
+  //         button.setAttribute("disabled", "disabled");
+  //       }
+  //       var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
+  //       window.location.replace(url);
+  //     }
 
-    });
-  });
+  //   });
+  // });
 
 </script>
 

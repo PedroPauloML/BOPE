@@ -55,6 +55,14 @@
     </div>
   <% end %>
 
+  <% if @observation.present? %>
+    <br>
+    <p style="font-size: 8pt;text-align: justify;">
+      OBS.:
+      <%= @observation %>
+    </p>
+  <% end %>
+
 <% end %>
 
 <%= render partial: 'reports/sprints_reports/shared/zingchart_to_team_monitoring' %>

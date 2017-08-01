@@ -1,33 +1,39 @@
-<div class="chart">
+<% Project.all.each do |project| %>
+  <div class="chart">
 
-  <div id="chart_<%= params[:project] %>"></div>
+    <div id="chart_<%= project.id %>"></div>
 
-  <p style="font-size: 8pt;text-align: justify;">
-    * Integrantes da equipe:
+    <p style="font-size: 8pt;text-align: justify;">
+      * Integrantes da equipe:
 
-    <% last_u = Project.find(params[:project]).team.users
-               .joins(:user_profile).order("user_profiles.name")
-               .last %>
+      <% last_u = project.team.users
+                 .joins(:user_profile).order("user_profiles.name")
+                 .last %>
 
-    <% Project.find(params[:project]).team.users.joins(:user_profile)
-       .order("user_profiles.name").each do |u| %>
+      <% project.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
-      <% unless u == last_u %>
-        <%= u.user_profile.name %>,
-      <% else %>
-        <%= u.user_profile.name %>.
+        <% unless u == last_u %>
+          <%= u.user_profile.name %>,
+        <% else %>
+          <%= u.user_profile.name %>.
+        <% end %>
+
       <% end %>
+    </p>
+  </div>
+<% end %>
 
-    <% end %>
-  </p>
-</div>
+<br>
+
+<p>Observações extras:</p>
+<%= text_area :report, "observation", rows: 5 , style: "width: 100%; max-width: 100%;", class: 'form-control', onfocusout: 'setObservation(this)' %>
 
 <br><br>
 
 <%= form_tag reports_sprints_reports_advance_and_completeness_path, method: :get, style: 'display: inline-block' do %>
   <%= hidden_field_tag :format, :pdf %>
-  <%= hidden_field_tag 'project', params[:project] %>
   <%= hidden_field_tag 'sprint', params[:sprint] %>
+  <%= hidden_field_tag 'observation' %>
 
   <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-default', target: '_blank' %> |
 <% end %>

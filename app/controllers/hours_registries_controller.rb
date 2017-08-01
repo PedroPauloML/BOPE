@@ -21,6 +21,7 @@ class HoursRegistriesController < ApplicationController
 
         HoursRegistry.create(
           start_hr: Time.now,
+          hours_performed: 0,
           week_id: params[:week],
           project_id: params[:id],
           user_id: current_user.id

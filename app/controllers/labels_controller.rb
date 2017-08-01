@@ -10,7 +10,7 @@ class LabelsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @labels = Label.all.order(created_at: :desc).page(params[:page]).per(10)
+    @labels = Label.all.order(:description).page(params[:page]).per(10)
   end
 
   def new

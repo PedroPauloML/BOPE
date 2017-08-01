@@ -153,12 +153,12 @@
               <% pass = (expected_hours.to_f / sprint.weeks.count.to_f).round(1) %>
               <% while(expected_hours >= 0) %>
                 <% expected_hours_for_week << expected_hours %>
-                <% expected_hours = (expected_hours - pass).round(1) %>
+                <% expected_hours = (expected_hours - pass).to_i %>
               <% end %>
 
               <% Burndown.where(project_id: project.id, week_id: sprint.weeks.ids).each do |b| %>
 
-                <% burndowns << (burndowns.last - b.points_made).round(1) %>
+                <% burndowns << (burndowns.last - b.points_made).to_i %>
 
               <% end %>
 
