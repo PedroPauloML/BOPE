@@ -18,7 +18,7 @@
         </li>
 
         <% if ['projects', 'sprints', 'activities', 'progresses',
-               'macro_activities'].include? params[:controller] %>
+               'macro_activities', 'weeks'].include? params[:controller] %>
           <% p_path = params[:controller] %>
         <% else %>
           <% p_path = 'projects' %>

@@ -43,4 +43,18 @@ module ApplicationHelper
             #{minutes.to_s.rjust(2, '0')}m
             #{seconds.to_s.rjust(2, '0')}s"
   end
+
+  def seconds_to_time(seconds)
+    seconds_to_time = seconds.to_i
+
+    hours = seconds_to_time / 3600
+    seconds_to_time -= hours * 3600
+
+    minutes = seconds_to_time / 60
+    seconds_to_time -= minutes * 60
+
+    seconds = seconds_to_time
+
+    return "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}"
+  end
 end

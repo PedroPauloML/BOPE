@@ -5,7 +5,6 @@ class WeeksController < ApplicationController
 
     if params[:hours_registry].present?
       @hours_registry = HoursRegistry.find(params[:hours_registry])
-      puts ">>>>>> TRUE <<<<<<"
     else
       @hours_registry = HoursRegistry.new
       @hours_registry.hours_performed = 0
@@ -13,7 +12,6 @@ class WeeksController < ApplicationController
       @hours_registry.week_id = @week.id
       @hours_registry.project_id = @project
       @hours_registry.save!
-      # puts ">>>>>> FALSE <<<<<<"
     end
 
     @user_id = params[:user_id]
@@ -24,7 +22,11 @@ class WeeksController < ApplicationController
 
     if @week.update(week_params)
         hr = HoursRegistry.find(params[:hours_registry][:id])
-        hr.hours_performed = params[:hours_registry][:hours_performed].to_f
+        hour = params[:hours_registry][:hours_performed].split(":")
+        puts ">>>>>>>>>>>>> #{hour}"
+        seconds = (hour.first.to_i * 3600) + (hour.second.to_i * 60) + hour.third.to_i
+
+        hr.hours_performed = seconds
         hr.save!
         redirect_to sprint_path(@week.sprint, project: params[:project],
                                 user: params[:user_id]),

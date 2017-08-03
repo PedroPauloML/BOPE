@@ -15,6 +15,7 @@
  *= require_tree .
  *= require_self
  *= require jquery.minicolors
+ *= require bootstrap-timepicker
  */
 
 @import 'bootstrap/glyphicons';
@@ -23,6 +24,10 @@
     .sprint-date {
         margin-bottom: 15px;
     }
+}
+
+.input-group {
+    margin: auto 15px;
 }
 
 .lead {
@@ -263,4 +268,39 @@ input[readonly]{
 .description + [data-readmore-toggle], .description[data-readmore] {
     display: block;
     margin: 10px 0 10px 10px;
+}
+
+/* TIMEPICKER */
+.bootstrap-timepicker-hour,
+.bootstrap-timepicker-minute,
+.bootstrap-timepicker-second {
+    color: black;
+}
+.bootstrap-timepicker-widget table td a {
+    background-color: #511834;
+    border-radius: 5px;
+    text-decoration: none;
+    border-color: white !important;
+    color: white !important;
+}
+.bootstrap-timepicker-widget table td a:hover {
+    background-color: rgba(122, 24, 52, 1) !important;
+}
+.bootstrap-timepicker-widget table td a i.icon-chevron-up::before {
+    content: "\e113";
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+}
+.bootstrap-timepicker-widget table td a i.icon-chevron-down::before {
+    content: "\e114";
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+}
+#hours_registry_hours_performed {
+    border-radius: 5px 0 0 5px;
+}
+.input-group-addon {
+    background-color: #511834 !important;
+    border: none !important;
+    color: white !important;
 }
