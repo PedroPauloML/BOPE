@@ -1,0 +1,85 @@
+<script>
+  window.onload = function() {
+
+    <% hr_users = [] %>
+    <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
+
+    <% if sprint.present? %>
+
+      <% Project.all.order(:description).each do |project| %>
+
+        <% values = [] %>
+
+        <% sprint.weeks.order(:description).each do |w| %>
+
+          <% project.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
+
+            <% hours_performed = 0 %>
+
+            <% w.hours_registries.where(user_id: u.id).each do |hr| %>
+
+              <% hours_performed += hr.hours_performed %>
+
+            <% end %>
+
+            <% values << (Burndown.where(week_id: w.id,
+                                          project_id: project.id
+                                          ).first.points_made /
+                          ((hours_performed * 100) /
+                           ((w.expected_hours.to_f * 3600) *
+                             w.hours_registries.where(
+                               user_id: u.id).count)).round(1)
+                         ).round(1) %>
+
+          <% end %>
+
+          <% values = values.map { |v| v.nan? ? 0 : v } %>
+
+        <% end %>
+
+        zingchart.render({
+          id: "chart_<%= project.id %>",
+          data: {
+            "type": "line",
+            "title": {
+              "text": "Produtividade Relativa"
+            },
+            "plotarea": {
+              "margin-top": "10%",
+            },
+            "plot": {
+              "value-box": {
+                "text":"%v%",
+                "padding-bottom": "5px"
+              }
+            },
+            "scale-x": {
+              "labels": <%= raw sprint.weeks.order(:description).collect { |w| w.description } %>,
+              "item": {
+                "font-size": "10pt",
+                "max-chars": 15,
+              }
+            },
+            "scale-y": {
+              "values": "0:<%= values.max + 50 %>:50",
+              "format":"%v%"
+            },
+            "series": [
+              <% w_count = 1 %>
+
+              <% values.each do |v| %>
+                {
+                  "values": <%= [v] %>,
+                  "text": "Semana <%= w_count %>"
+                },
+                <% w_count += 1 %>
+              <% end %>
+            ]
+          }
+        });
+
+      <% end %>
+
+    <% end %>
+  };
+</script>

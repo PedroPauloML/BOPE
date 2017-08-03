@@ -1,5 +1,8 @@
 <% Project.all.order(:description).each do |p| %>
   <div class="chart">
+    <h1 style="color: black; font-size: 20pt; font-weight: bold; text-align: center; margin-top: 0;">
+      <%= p.description %>
+    </h1>
     <div id="chart_<%= p.id %>"></div>
     <p style="font-size: 8pt;text-align: justify;">
       * Integrantes da equipe:
@@ -29,7 +32,6 @@
 <%= form_tag reports_sprints_reports_relative_dedication_path, method: :get, style: 'display: inline-block' do %>
   <%= hidden_field_tag :format, :pdf %>
   <%= hidden_field_tag 'observation' %>
-  <%= hidden_field_tag 'project', params[:project] %>
   <%= hidden_field_tag 'sprint', params[:sprint] %>
 
   <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-default', target: '_blank' %> |

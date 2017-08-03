@@ -25,7 +25,7 @@
 
 <p style="font-size: 8pt;text-align: justify;">
 
-  <% @sprint.weeks.each do |w| %>
+  <% @sprint.weeks.order(:description).each do |w| %>
       Dedicação da <%= w.description.downcase %>, esperados
       <%= w.expected_hours %> horas para os colaboradores
 

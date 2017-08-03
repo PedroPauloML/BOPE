@@ -33,7 +33,9 @@
                        [['Dedicação relativa', 1],
                         ['Lista de atividades', 2],
                         ['Avanço e completude', 3],
-                        ['Acompanhamento por equipe', 4]],
+                        ['Acompanhamento por equipe', 4],
+                        ['Produtividade relativa', 5]],#,
+                        #['Velocidade relativa', 6]],
                        {selected: "#{params[:report_kind].present? ? params[:report_kind] : ''}"},
                        {class: 'form-control'}) %>
           </div>
@@ -47,24 +49,8 @@
           <span class="title">Relatório para a sprint:</span>
         </div>
 
-        <% if (params[:report_kind] == '3' && params[:project].present?) %>
-
-          <% project = Project.find(params[:project]) %>
-
-          <div class="col-lg-4 col-sm-6 col-xs-6">
-            <div class="select-user">
-              <%= select(:sprint, "id",
-                         project.sprints.order(:description).collect {|s| [ "#{s.description} (#{s.semester})", s.id ] },
-                         {selected: "#{params[:sprint].present? ? params[:sprint] : ''}", include_blank: "-- Nome da sprint --"},
-                         {class: 'form-control'}) %>
-            </div>
-          </div>
-
-        <% elsif ((!params[:report_kind].present?) ||
-                  (params[:report_kind] == '1') ||
-                  (params[:report_kind] == '2') ||
-                  (params[:report_kind] == '3') ||
-                  (params[:report_kind] == '4')) %>
+        <% if ((!params[:report_kind].present?) ||
+                  (['1', '2', '3', '4', '5', '6'].include? params[:report_kind])) %>
 
           <div class="col-lg-4 col-sm-6 col-xs-6">
             <div class="select-user">
@@ -91,11 +77,8 @@
 
       <br>
 
-      <% if (!params[:report_kind].present?) ||
-            (params[:report_kind] == '1') ||
-            (params[:report_kind] == '2') ||
-            (params[:report_kind] == '3') ||
-            (params[:report_kind] == '4') %>
+      <% if ((!params[:report_kind].present?) ||
+             (['1', '2', '3', '4', '5', '6'].include? params[:report_kind])) %>
         <button id="buscar" class="btn btn-default pull-right" onclick="buscarRelatorio()">Buscar</button>
       <% else %>
         <button class="btn btn-default pull-right" disabled="disabled">Buscar</button>
@@ -115,6 +98,10 @@
           <%= render partial: 'reports/sprints_reports/shared/chart_to_advance_and_completeness' %>
         <% elsif params[:report_kind] == '4' %>
           <%= render partial: 'reports/sprints_reports/shared/chart_to_team_monitoring' %>
+        <% elsif params[:report_kind] == '5' %>
+          <%= render partial: 'reports/sprints_reports/shared/chart_to_relative_productivity' %>
+        <%# elsif params[:report_kind] == '6' %>
+          <%#= render partial: 'reports/sprints_reports/shared/chart_to_relative_velocity' %>
         <% end %>
 
       <% else %>
@@ -137,7 +124,6 @@
 <script>
 
   function buscarRelatorio() {
-    var project_id = $("#project_id")[0];
     var sprint_id = $("#sprint_id")[0];
     var report_kind = $("#report_kind")[0];
 
@@ -146,7 +132,8 @@
       sprint_id.removeAttribute("style");
 
       if ((report_kind.value == '1') || (report_kind.value == '2') ||
-          (report_kind.value == '3') || (report_kind.value == '4')) {
+          (report_kind.value == '3') || (report_kind.value == '4') ||
+          (report_kind.value == '5') || (report_kind.value == '6')) {
 
         var url = "/reports/sprints_reports/?report_kind=" + report_kind.value + "&sprint=" + sprint_id.value;
         window.location.replace(url);
@@ -163,50 +150,6 @@
     $('#observation')[0].value = input.value;
   }
 
-  // $(function(){
-  //   $('#project_id').bind('change', function () {
-  //     var sprint_id = $("#sprint_id")[0];
-  //     sprint_id.setAttribute("disabled", "disabled");
-  //     var project_id = $("#project_id")[0];
-  //     var report_kind = $("#report_kind")[0];
-  //     var url = "/reports/sprints_reports/?report_kind=" + report_kind.value +"&project=" + project_id.value;
-  //     window.location.replace(url);
-  //   });
-
-  //   $('#report_kind').bind('change', function () {
-
-  //     if (($("#report_kind")[0].value == '3')) {
-  //       var sprint_id = $("#sprint_id")[0];
-  //       sprint_id.setAttribute("disabled", "disabled");
-  //       var project_id = $("#project_id")[0];
-  //       project_id.removeAttribute("disabled");
-  //       project_id.setAttribute("disabled", "disabled");
-  //       var button = $("#buscar")[0];
-  //       if (!(button == undefined)){
-  //         button.setAttribute("disabled", "disabled");
-  //       }
-  //       var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
-  //       window.location.replace(url);
-
-  //     } else if (($("#report_kind")[0].value == '1') ||
-  //                ($("#report_kind")[0].value == '2') ||
-  //                ($("#report_kind")[0].value == '4')) {
-
-  //       var sprint_id = $("#sprint_id")[0];
-  //       sprint_id.setAttribute("disabled", "disabled");
-  //       var project_id = $("#project_id")[0];
-  //       project_id.setAttribute("disabled", "disabled");
-  //       var button = $("#buscar")[0];
-  //       if (!(button == undefined)){
-  //         button.setAttribute("disabled", "disabled");
-  //       }
-  //       var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
-  //       window.location.replace(url);
-  //     }
-
-  //   });
-  // });
-
 </script>
 
 <% if params[:report_kind] == '1' %>
@@ -217,4 +160,8 @@
   <%= render partial: 'reports/sprints_reports/shared/zingchart_to_advance_and_completeness' %>
 <% elsif params[:report_kind] == '4' %>
   <%= render partial: 'reports/sprints_reports/shared/zingchart_to_team_monitoring' %>
+<% elsif params[:report_kind] == '5' %>
+  <%= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_productivity' %>
+<%# elsif params[:report_kind] == '6' %>
+  <%#= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_velocity' %>
 <% end %>

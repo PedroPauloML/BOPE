@@ -4,6 +4,11 @@
 <b>Data:</b> <%= l(Time.zone.today) %> <br>
 
 <% Project.all.order(:description).each do |p| %>
+
+  <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+    <%= p.description %>
+  </h1>
+
   <div id="chart_<%= p.id %>" style="width: 1000px"></div>
 
   <p style="font-size: 8pt;text-align: justify;">
@@ -24,7 +29,7 @@
 
   <p style="font-size: 8pt;text-align: justify;">
 
-    <% @sprint.weeks.each do |w| %>
+    <% @sprint.weeks.order(:description).each do |w| %>
         Dedicação da <%= w.description.downcase %>, esperados
         <%= w.expected_hours %> horas para os colaboradores
 

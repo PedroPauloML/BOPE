@@ -10,7 +10,7 @@
 
         <% avgs = [] %>
 
-        <% sprint.weeks.each do |w| %>
+        <% sprint.weeks.order(:description).each do |w| %>
 
           <% values = 0 %>
 
@@ -62,7 +62,7 @@
 
         <% speed = [] %>
 
-        <% Burndown.where(project_id: project.id, week_id: sprint.weeks.ids).each do |b| %>
+        <% Burndown.where(project_id: project.id, week_id: sprint.weeks.order(:description).ids).each do |b| %>
 
           <% speed << b.points_made %>
 

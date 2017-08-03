@@ -51,7 +51,7 @@
             "series": [
               <% w_count = 1 %>
 
-              <% sprint.weeks.each do |w| %>
+              <% sprint.weeks.order(:description).each do |w| %>
 
                 <% values = [] %>
 
