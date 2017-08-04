@@ -34,8 +34,8 @@
                         ['Lista de atividades', 2],
                         ['Avanço e completude', 3],
                         ['Acompanhamento por equipe', 4],
-                        ['Produtividade relativa', 5]],#,
-                        #['Velocidade relativa', 6]],
+                        ['Produtividade relativa', 5],
+                        ['Velocidade relativa', 6]],
                        {selected: "#{params[:report_kind].present? ? params[:report_kind] : ''}"},
                        {class: 'form-control'}) %>
           </div>
@@ -100,8 +100,8 @@
           <%= render partial: 'reports/sprints_reports/shared/chart_to_team_monitoring' %>
         <% elsif params[:report_kind] == '5' %>
           <%= render partial: 'reports/sprints_reports/shared/chart_to_relative_productivity' %>
-        <%# elsif params[:report_kind] == '6' %>
-          <%#= render partial: 'reports/sprints_reports/shared/chart_to_relative_velocity' %>
+        <% elsif params[:report_kind] == '6' %>
+          <%= render partial: 'reports/sprints_reports/shared/chart_to_relative_velocity' %>
         <% end %>
 
       <% else %>
@@ -162,6 +162,6 @@
   <%= render partial: 'reports/sprints_reports/shared/zingchart_to_team_monitoring' %>
 <% elsif params[:report_kind] == '5' %>
   <%= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_productivity' %>
-<%# elsif params[:report_kind] == '6' %>
-  <%#= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_velocity' %>
+<% elsif params[:report_kind] == '6' %>
+  <%= render partial: 'reports/sprints_reports/shared/zingchart_to_relative_velocity' %>
 <% end %>

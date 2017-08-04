@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     get '/sprints_reports/advance_and_completeness' => 'sprints_reports#advance_and_completeness'
     get '/sprints_reports/team_monitoring' => 'sprints_reports#team_monitoring'
     get '/sprints_reports/relative_productivity' => 'sprints_reports#relative_productivity'
+    get '/sprints_reports/relative_velocity' => 'sprints_reports#relative_velocity'
   end
 
   post '/projects/:id/login', to: 'hours_registries#login', as: 'project_login'

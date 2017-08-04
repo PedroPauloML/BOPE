@@ -110,4 +110,26 @@ class Reports::SprintsReportsController < ReportsController
        end
     end
   end
+
+  def relative_velocity
+    respond_to do |format|
+      format.pdf do
+        render pdf: "report",
+               disposition: "inline",
+               template: "reports/sprints_reports/relative_velocity.html.erb",
+               orientation: 'Landscape',
+               layout: "report_pdf",
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] },
+               page_size: 'A4',
+               encoding: 'utf8'
+      end
+      format.html do
+        render template: "reports/sprints_reports/relative_velocity.html.erb",
+               layout: "report_pdf",
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] }
+       end
+    end
+  end
 end

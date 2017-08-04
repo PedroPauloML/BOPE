@@ -11,15 +11,22 @@
 
         <% expected_points = 0 %>
 
-        <% sprint.activities.where(project) %>
+        <% pontos_cadastrados = 0 %>
+
+        <% sprint.activities.where(project_id: project.id).each do |a| %>
+
+          <% pontos_cadastrados += a.pontos_cadastrados %>
+
+        <% end %>
+
         <% Burndown.where(project_id: project.id, week_id: sprint.weeks.order(:description).ids).each do |b| %>
 
-          <% speed << b.points_made %>
+          <% speed << (b.points_made / pontos_cadastrados).round(1) %>
 
         <% end %>
 
         zingchart.render({
-          id: "chart_<%= project.id %>_speed",
+          id: "chart_<%= project.id %>",
           data: {
             "type": "line",
             "title": {
@@ -30,7 +37,7 @@
             },
             "plot": {
               "value-box": {
-                "text": "%v pts."
+                "text": "%v%"
               }
             },
             "scale-x": {
@@ -45,9 +52,14 @@
               }
             },
             "series": [
-              {
-                "values": <%= speed %>
-              }
+              <% w_count = 1 %>
+              <% speed.each do |s| %>
+                {
+                  "values": <%= [s] %>,
+                  "text": "Semana <%= w_count %>"
+                }
+                <% w_count += 1 %>
+              <% end %>
             ]
           }
         });
