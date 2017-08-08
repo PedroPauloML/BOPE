@@ -15,7 +15,8 @@
  *= require_tree .
  *= require_self
  *= require jquery.minicolors
- *= require bootstrap-timepicker
+ *= require bootstrap
+ *= require bootstrap-datetimepicker
  */
 
 @import 'bootstrap/glyphicons';
@@ -24,6 +25,19 @@
     .sprint-date {
         margin-bottom: 15px;
     }
+}
+
+.no-spin::-webkit-inner-spin-button, .no-spin::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+    -moz-appearance:textfield !important;
+}
+
+.clock {
+    margin: 2px 0 10px -22px;
+}
+.clock .input-group {
+    margin: 10px auto;
 }
 
 .input-group {

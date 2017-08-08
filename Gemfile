@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'bootstrap-timepicker-rails'
 # PDF generator (from HTML) plugin for Ruby on Rails
 gem 'wicked_pdf'
 # Because wicked_pdf is a wrapper for wkhtmltopdf, you'll need to install that, too.

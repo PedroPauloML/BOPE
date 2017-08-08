@@ -106,9 +106,9 @@
       <%# BURNDOWN %>
       <% projects.each do |project| %>
 
-        <% expected_hours = 0 %>
+        <% expected_points = 0 %>
         <% Activity.where(sprint_id: sprint.id, project_id: project.id).each do |a| %>
-          <% expected_hours += a.pontos_cadastrados %>
+          <% expected_points += a.pontos_cadastrados %>
         <% end %>
 
         zingchart.render({
@@ -139,35 +139,39 @@
                                  .collect { |w| w.description }) %>
             },
             "scale-y": {
-              "values": "0:<%= expected_hours + 20 %>:20",
+              "values": "0:<%= expected_points + 20 %>:20",
               "label": {
                 "text": "Pontos"
               }
             },
             "series": [
 
-              <% burndowns = [expected_hours] %>
+              <% burndowns = [expected_points] %>
+              <% expected_points_for_week = [] %>
 
+              <% pass = (expected_points.to_f / sprint.weeks.count.to_f).round(1) %>
 
-              <% expected_hours_for_week = [] %>
-              <% pass = (expected_hours.to_f / sprint.weeks.count.to_f).round(1) %>
-              <% while(expected_hours >= 0) %>
-                <% expected_hours_for_week << expected_hours %>
-                <% expected_hours = (expected_hours - pass).to_i %>
+              <% while(expected_points >= 0) %>
+                <% expected_points_for_week << expected_points %>
+                <% expected_points = (expected_points - pass).round(1) %>
               <% end %>
+
+              <% expected_points_for_week = expected_points_for_week.collect { |ep| ep.round(0) } %>
 
               <% Burndown.where(project_id: project.id, week_id: sprint.weeks.ids).each do |b| %>
 
-                <% burndowns << (burndowns.last - b.points_made).to_i %>
+                <% burndowns << (burndowns.last - b.points_made).round(1) %>
 
               <% end %>
+
+              <% burndowns = burndowns.collect { |b| b.round(0) } %>
 
               {
                 "values": <%= burndowns %>,
                 "text": "Atual"
               },
               {
-                "values": <%= expected_hours_for_week %>,
+                "values": <%= expected_points_for_week %>,
                 "text": "Ideal"
               }
 

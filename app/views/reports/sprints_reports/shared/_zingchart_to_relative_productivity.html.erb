@@ -8,34 +8,54 @@
 
       <% Project.all.order(:description).each do |project| %>
 
-        <% values = [] %>
+        <%# VELOCIDADE RELATIVA %>
+        <% speed = [] %>
+        <% expected_points = 0 %>
+        <% pontos_cadastrados = 0 %>
 
+        <% sprint.activities.where(project_id: project.id).each do |a| %>
+          <% pontos_cadastrados += a.pontos_cadastrados %>
+        <% end %>
+
+        <% Burndown.where(project_id: project.id, week_id: sprint.weeks.order(:description).ids).each do |b| %>
+          <% speed << (b.points_made / pontos_cadastrados).round(1) %>
+        <% end %>
+
+        <%# DEDICAÇÃO RELATIVA %>
+        <% relative_dedication = [] %>
         <% sprint.weeks.order(:description).each do |w| %>
+
+          <% dedication = [] %>
 
           <% project.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
             <% hours_performed = 0 %>
 
             <% w.hours_registries.where(user_id: u.id).each do |hr| %>
-
               <% hours_performed += hr.hours_performed %>
-
             <% end %>
 
-            <% values << (Burndown.where(week_id: w.id,
-                                          project_id: project.id
-                                          ).first.points_made /
-                          ((hours_performed * 100) /
-                           ((w.expected_hours.to_f * 3600) *
-                             w.hours_registries.where(
-                               user_id: u.id).count)).round(1)
+            <% dedication << ((hours_performed * 100) /
+                          ((w.expected_hours.to_f * 3600) *
+                            w.hours_registries.where(user_id: u.id).count)
                          ).round(1) %>
-
           <% end %>
 
-          <% values = values.map { |v| v.nan? ? 0 : v } %>
+          <% avg_lab = 0 %>
+          <% dedication.each do |v| %>
+            <% avg_lab += v %>
+          <% end %>
+          <% dedication << (avg_lab / dedication.count).round(1) %>
 
+          <% relative_dedication = dedication.last %>
         <% end %>
+
+        <%# PRODUTIVIDADE RELATIVA %>
+        <% relative_productivity = [] %>
+        <% x = sprint.weeks.count - 1 %>
+        <%# (0..x).each do |i| %>
+          <%# relative_productivity << speed[i] / relative_dedication[i] %>
+        <%# end %>
 
         zingchart.render({
           id: "chart_<%= project.id %>",
@@ -61,19 +81,13 @@
               }
             },
             "scale-y": {
-              "values": "0:<%= values.max + 50 %>:50",
+              "values": "0:100<%#= relative_productivity.max + 50 %>:50",
               "format":"%v%"
             },
             "series": [
-              <% w_count = 1 %>
-
-              <% values.each do |v| %>
-                {
-                  "values": <%= [v] %>,
-                  "text": "Semana <%= w_count %>"
-                },
-                <% w_count += 1 %>
-              <% end %>
+              {
+                "values": <%= speed %>,
+              }
             ]
           }
         });

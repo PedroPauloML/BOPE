@@ -164,14 +164,18 @@
 
               <% while(expected_points >= 0) %>
                 <% expected_points_for_week << expected_points %>
-                <% expected_points = (expected_points - pass).to_i %>
+                <% expected_points = (expected_points - pass).round(1) %>
               <% end %>
+
+              <% expected_points_for_week = expected_points_for_week.collect { |ep| ep.round(0) } %>
 
               <% Burndown.where(project_id: project.id, week_id: weeks.ids).each do |b| %>
 
-                <% burndowns << (burndowns.last - b.points_made).to_i %>
+                <% burndowns << (burndowns.last - b.points_made).round(1) %>
 
               <% end %>
+
+              <% burndowns = burndowns.collect { |b| b.round(0) } %>
 
               {
                 "values": <%= burndowns %>,

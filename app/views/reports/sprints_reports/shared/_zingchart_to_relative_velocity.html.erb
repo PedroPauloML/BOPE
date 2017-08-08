@@ -9,8 +9,6 @@
 
         <% speed = [] %>
 
-        <% expected_points = 0 %>
-
         <% pontos_cadastrados = 0 %>
 
         <% sprint.activities.where(project_id: project.id).each do |a| %>
@@ -19,9 +17,18 @@
 
         <% end %>
 
-        <% Burndown.where(project_id: project.id, week_id: sprint.weeks.order(:description).ids).each do |b| %>
+        <% sprint.weeks.order(:description).each do |w| %>
 
-          <% speed << (b.points_made / pontos_cadastrados).round(1) %>
+          <% if Burndown.where(project_id: project.id, week_id: w.id).present? %>
+
+            <% b = Burndown.where(project_id: project.id, week_id: w.id).first %>
+            <% speed << (b.points_made / pontos_cadastrados).round(1) %>
+
+          <% else %>
+
+            <% speed << 0.0 %>
+
+          <% end %>
 
         <% end %>
 
@@ -52,14 +59,9 @@
               }
             },
             "series": [
-              <% w_count = 1 %>
-              <% speed.each do |s| %>
-                {
-                  "values": <%= [s] %>,
-                  "text": "Semana <%= w_count %>"
-                }
-                <% w_count += 1 %>
-              <% end %>
+              {
+                "values": <%= speed %>
+              }
             ]
           }
         });

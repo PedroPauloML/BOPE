@@ -18,7 +18,8 @@
 //= require_tree .
 //= require bootstrap-datepicker
 //= require jquery.minicolors
-//= require bootstrap-timepicker
+//= require moment
+//= require bootstrap-datetimepicker
 
 
 
