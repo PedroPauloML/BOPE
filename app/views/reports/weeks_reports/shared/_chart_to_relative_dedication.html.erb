@@ -3,9 +3,11 @@
   <p style="font-size: 8pt;text-align: justify;">
     * Integrantes da equipe:
 
-    <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
+    <% users = User.joins(:user_profile).where.not('user_profiles.name = ?',
+                'Usuário Padrão').order("user_profiles.name") %>
+    <% last_u = users.last %>
 
-    <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+    <% users.each do |u| %>
 
       <% unless u == last_u %>
         <%= u.user_profile.name %>,

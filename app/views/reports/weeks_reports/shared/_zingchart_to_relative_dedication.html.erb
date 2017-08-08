@@ -5,6 +5,9 @@
 
     <% if sprint.present? %>
 
+      <% users = User.joins(:user_profile).where.not('user_profiles.name = ?',
+                'Usuário Padrão').order("user_profiles.name") %>
+
       zingchart.render({
         id: "chart",
         data: {
@@ -30,9 +33,7 @@
             }
           },
           "scale-x": {
-            <% labels = User.all.includes(:user_profile)
-                        .order("user_profiles.name")
-                        .collect { |u| u.user_profile.name } %>
+            <% labels = users.collect { |u| u.user_profile.name } %>
             <% labels << 'Lab.' %>
             "labels": <%= raw labels %>,
             "item": {
@@ -63,7 +64,7 @@
 
               <% values = [] %>
 
-              <% User.all.joins(:user_profile).order("user_profiles.name").each do |u| %>
+              <% users.each do |u| %>
 
                 <% hours_performed = 0 %>
 
@@ -80,14 +81,8 @@
 
               <% end %>
 
-              <% avg_lab = 0 %>
-              <% values.each do |v| %>
-                <% avg_lab += v %>
-              <% end %>
-
-              <% values << (avg_lab / values.count).round(1) %>
-
               <% values = values.map { |v| v.nan? ? 0 : v } %>
+              <% values << (values.sum / values.count).round(1) %>
 
               {
                 "values": <%= values %>,

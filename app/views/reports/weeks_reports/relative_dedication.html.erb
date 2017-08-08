@@ -9,9 +9,11 @@
 <p style="font-size: 8pt;text-align: justify;">
   * Integrantes da equipe:
 
-  <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
+  <% users = User.joins(:user_profile).where.not('user_profiles.name = ?',
+                'Usuário Padrão').order("user_profiles.name") %>
+  <% last_u = users.last %>
 
-  <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+  <% users.each do |u| %>
 
     <% unless u == last_u %>
       <%= u.user_profile.name %>,
@@ -29,18 +31,17 @@
       Dedicação da <%= w.description.downcase %>, esperados
       <%= w.expected_hours %> horas para os colaboradores
 
-      <% first_u = User.joins(:user_profile).order("user_profiles.name").first %>
-      <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
-        <% w_count = 0 %>
-        <% w_count = w.hours_registries.where(user_id: u.id).count %>
+      <% first_u = users.first %>
+      <% users.each do |u| %>
+        <% p_count = Project.joins(team:[:users]).where('users.id = ?', u.id).count %>
 
-          <% if w_count > 1 %>
-            <% if u == first_u %>
-              e <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
-            <% else %>
-              , <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
-            <% end %>
+        <% if p_count > 1 %>
+          <% if u == first_u %>
+            e <%= w.expected_hours.to_i * p_count %> horas para <%= u.user_profile.name %>
+          <% else %>
+            , <%= w.expected_hours.to_i * p_count %> horas para <%= u.user_profile.name %>
           <% end %>
+        <% end %>
       <% end %>
 
     .<br>

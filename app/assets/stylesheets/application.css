@@ -16,7 +16,6 @@
  *= require_self
  *= require jquery.minicolors
  *= require bootstrap
- *= require bootstrap-datetimepicker
  */
 
 @import 'bootstrap/glyphicons';
