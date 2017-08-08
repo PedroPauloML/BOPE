@@ -29,7 +29,6 @@
 <%= form_tag reports_weeks_reports_relative_dedication_path, method: :get, style: 'display: inline-block' do %>
   <%= hidden_field_tag :format, :pdf %>
   <%= hidden_field_tag 'observation' %>
-  <%= hidden_field_tag 'project', params[:project] %>
   <%= hidden_field_tag 'sprint', params[:sprint] %>
 
   <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-default', target: '_blank' %> |

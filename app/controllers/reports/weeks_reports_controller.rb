@@ -33,14 +33,16 @@ class Reports::WeeksReportsController < ReportsController
                disposition: "inline",
                template: "reports/weeks_reports/team_monitoring.html.erb",
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]) },
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/weeks_reports/team_monitoring.html.erb",
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]) }
+               locals: { :@sprint => Sprint.find(params[:sprint]),
+                         :@observation => params[:observation] }
        end
     end
   end

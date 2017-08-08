@@ -26,13 +26,20 @@
 
           <% values = 0 %>
 
-          <% w.hours_registries.where(project_id: project.id).each do |hr| %>
+          <% if w.hours_registries.where(project_id: project.id).present? %>
+            <% w.hours_registries.where(project_id: project.id).each do |hr| %>
 
-            <% values += ((hr.hours_performed * 100) / (w.expected_hours.to_f * 3600)).round(1) %>
+              <% values += ((hr.hours_performed * 100) / (w.expected_hours.to_f * 3600)).round(1) %>
 
+            <% end %>
+
+            <% avgs << (values /
+                        projects.first.team.users.joins(:user_profile)
+                        .where.not('user_profiles.name = ?', 'Usuário Padrão')
+                        .count).round(1) %>
+          <% else %>
+            <% avgs << 0 %>
           <% end %>
-
-          <% avgs << (values / projects.first.team.users.count).round(1) %>
 
         <% end %>
 
@@ -74,9 +81,10 @@
 
         <% speed = [] %>
 
-        <% Burndown.where(project_id: project.id, week_id: weeks.ids).each do |b| %>
+        <% weeks.each do |w| %>
 
-          <% speed << b.points_made %>
+          <% b = Burndown.where(project_id: project.id, week_id: w.id).first %>
+          <% b.present? ? speed << b.points_made : speed << 0 %>
 
         <% end %>
 
@@ -119,8 +127,13 @@
       <% projects.each do |project| %>
 
         <% expected_points = 0 %>
-        <% Activity.where(sprint_id: sprint.id, project_id: project.id).each do |a| %>
-          <% expected_points += a.pontos_cadastrados %>
+
+        <% if Activity.where(sprint_id: sprint.id, project_id: project.id).present? %>
+          <% Activity.where(sprint_id: sprint.id, project_id: project.id).each do |a| %>
+            <% expected_points += a.pontos_cadastrados %>
+          <% end %>
+        <% else %>
+          <% expected_points = 0 %>
         <% end %>
 
         zingchart.render({
@@ -157,26 +170,38 @@
             },
             "series": [
 
-              <% burndowns = [expected_points] %>
+              <% burndowns = [] %>
               <% expected_points_for_week = [] %>
 
-              <% pass = (expected_points.to_f / weeks.count.to_f).round(1) %>
+              <% if expected_points > 0 %>
 
-              <% while(expected_points >= 0) %>
-                <% expected_points_for_week << expected_points %>
-                <% expected_points = (expected_points - pass).round(1) %>
+                <% burndowns = [expected_points] %>
+
+                <% pass = (expected_points.to_f / weeks.count.to_f).round(1) %>
+
+                <% while(expected_points >= 0) %>
+                  <% expected_points_for_week << expected_points %>
+                  <% expected_points = (expected_points - pass).round(1) %>
+                <% end %>
+
+                <% expected_points_for_week = expected_points_for_week.collect { |ep| ep.round(0) } %>
+
+                <% Burndown.where(project_id: project.id, week_id: weeks.ids).each do |b| %>
+
+                  <% burndowns << (burndowns.last - b.points_made).round(1) %>
+
+                <% end %>
+
+                <% burndowns = burndowns.collect { |b| b.round(0) } %>
+
+              <% else %>
+
+                <% weeks.count.times do %>
+                  <% burndowns << 0 %>
+                  <% expected_points_for_week << 0 %>
+                <% end %>
+
               <% end %>
-
-              <% expected_points_for_week = expected_points_for_week.collect { |ep| ep.round(0) } %>
-
-              <% Burndown.where(project_id: project.id, week_id: weeks.ids).each do |b| %>
-
-                <% burndowns << (burndowns.last - b.points_made).round(1) %>
-
-              <% end %>
-
-              <% burndowns = burndowns.collect { |b| b.round(0) } %>
-
               {
                 "values": <%= burndowns %>,
                 "text": "Atual"
@@ -185,7 +210,6 @@
                 "values": <%= expected_points_for_week %>,
                 "text": "Ideal"
               }
-
             ]
           }
         });

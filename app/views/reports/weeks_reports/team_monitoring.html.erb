@@ -47,6 +47,13 @@
 
         <div id="chart_<%= p.id %>_burndown" style="width: 800px"></div><br><br>
 
+        <p style="font-size: 8pt;text-align: justify;">
+          <% if @observation.present? %>
+            <br>
+            OBS.:
+            <%= @observation %>
+          <% end %>
+        </p>
       </div>
     <% end %>
   <% else %>
