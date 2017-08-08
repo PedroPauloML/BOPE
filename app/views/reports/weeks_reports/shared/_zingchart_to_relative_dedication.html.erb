@@ -76,7 +76,7 @@
 
                 <% values << ((hours_performed * 100) /
                               ((w.expected_hours.to_f * 3600) *
-                                w.hours_registries.where(user_id: u.id).count)
+                                Project.joins(team:[:users]).where('users.id = ?', u.id).count)
                              ).round(1) %>
 
               <% end %>

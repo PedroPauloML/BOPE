@@ -1,56 +1,59 @@
-<%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
-<h1>Relatório de Dedicação Relativa na <%= "#{@sprint.description} (#{@sprint.semester})" %></h1>
-<b>Desenvolvido por:</b> Lorena Souza Costa <br>
-<b>Data:</b> <%= l(Time.zone.today) %> <br>
-
 <% Project.all.order(:description).each do |p| %>
 
-  <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
-    <%= p.description %>
-  </h1>
+  <div style="page-break-before: always;">
 
-  <div id="chart_<%= p.id %>" style="width: 1000px"></div>
+    <%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
+    <h1>Relatório de Dedicação Relativa na <%= "#{@sprint.description} (#{@sprint.semester})" %></h1>
+    <b>Desenvolvido por:</b> Lorena Souza Costa <br>
+    <b>Data:</b> <%= l(Time.zone.today) %> <br>
 
-  <p style="font-size: 8pt;text-align: justify;">
-    * Integrantes da equipe:
+    <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+      <%= p.description %>
+    </h1>
 
-    <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
+    <div id="chart_<%= p.id %>" style="width: 1000px"></div>
 
-    <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+    <p style="font-size: 8pt;text-align: justify;">
+      * Integrantes da equipe:
 
-      <% unless u == last_u %>
-        <%= u.user_profile.name %>,
-      <% else %>
-        <%= u.user_profile.name %>.
-      <% end %>
+      <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
 
-    <% end %>
-  </p>
+      <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
-  <p style="font-size: 8pt;text-align: justify;">
-
-    <% @sprint.weeks.order(:description).each do |w| %>
-        Dedicação da <%= w.description.downcase %>, esperados
-        <%= w.expected_hours %> horas para os colaboradores
-
-        <% first_u = p.team.users.joins(:user_profile).order("user_profiles.name").first %>
-        <% p.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
-          <% w_count = 0 %>
-          <% w_count = w.hours_registries.where(user_id: u.id).count %>
-
-            <% if w_count > 1 %>
-              <% if u == first_u %>
-                e <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
-              <% else %>
-                , <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
-              <% end %>
-            <% end %>
+        <% unless u == last_u %>
+          <%= u.user_profile.name %>,
+        <% else %>
+          <%= u.user_profile.name %>.
         <% end %>
 
-      .<br>
-    <% end %>
+      <% end %>
+    </p>
 
-  </p>
+    <p style="font-size: 8pt;text-align: justify;">
+
+      <% @sprint.weeks.order(:description).each do |w| %>
+          Dedicação da <%= w.description.downcase %>, esperados
+          <%= w.expected_hours %> horas para os colaboradores
+
+          <% first_u = p.team.users.joins(:user_profile).order("user_profiles.name").first %>
+          <% p.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
+            <% w_count = 0 %>
+            <% w_count = w.hours_registries.where(user_id: u.id).count %>
+
+              <% if w_count > 1 %>
+                <% if u == first_u %>
+                  e <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
+                <% else %>
+                  , <%= w.expected_hours.to_i * w_count %> horas para <%= u.user_profile.name %>
+                <% end %>
+              <% end %>
+          <% end %>
+
+        .<br>
+      <% end %>
+
+    </p>
+  </div>
 
 <% end %>
 

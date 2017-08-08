@@ -33,7 +33,7 @@
               }
             },
             "scale-x": {
-              <% labels = project.team.users.includes(:user_profile)
+              <% labels = project.team.users.joins(:user_profile)
                           .order("user_profiles.name")
                           .collect { |u| u.user_profile.name } %>
               <% labels << 'Lab.' %>
@@ -59,26 +59,21 @@
 
                   <% hours_performed = 0 %>
 
-                  <% w.hours_registries.where(user_id: u.id).each do |hr| %>
+                  <% w.hours_registries.where(user_id: u.id, project_id: project.id).each do |hr| %>
 
                     <% hours_performed += hr.hours_performed %>
 
                   <% end %>
 
                   <% values << ((hours_performed * 100) /
-                                ((w.expected_hours.to_f * 3600) *
-                                  w.hours_registries.where(user_id: u.id).count)
+                                (w.expected_hours.to_f * 3600)
                                ).round(1) %>
 
                 <% end %>
 
-                <% avg_lab = 0 %>
-                <% values.each do |v| %>
-                  <% avg_lab += v %>
-                <% end %>
-                <% values << (avg_lab / values.count).round(1) %>
-
                 <% values = values.map { |v| v.nan? ? 0 : v } %>
+
+                <% values << (values.sum / values.count).round(1) %>
 
                 {
                   "values": <%= values %>,
