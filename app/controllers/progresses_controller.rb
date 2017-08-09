@@ -8,21 +8,65 @@ class ProgressesController < ApplicationController
     @progress = Progress.new
     @project = Project.find(params[:project])
     @completeness = 0
-    MacroActivity.where(project_id: @project.id).each do |ma|
-      @completeness += ma.completeness.to_f
-    end
-    @completeness = @completeness / MacroActivity.where(project_id: @project.id).count
-    if @project.progresses.present?
-      @advance = @completeness - @project.progresses.last.completeness.to_f
+
+    if MacroActivity.where(project_id: @project.id).present?
+
+      MacroActivity.where(project_id: @project.id).each do |ma|
+        @completeness += ma.completeness.to_f
+      end
+
+      @completeness = @completeness / MacroActivity.where(project_id: @project.id).count
+
+      # if @project.progresses.present?
+      #   @advance = @completeness - @project.progresses.last.completeness.to_f
+      # else
+      #   @advance = @completeness
+      # end
+
     else
-      @advance = @completeness
+      @completeness = nil
+      # @advance = nil
     end
+
   end
 
   def create
+
     @progress = Progress.new(progress_params)
+    @project = @progress.project
 
     if @progress.save
+
+      project = Project.find(params[:progress][:project_id])
+      progresses = project.progresses.joins(:sprint).order('sprints.inicio')
+      before_p = progresses.joins(:sprint).where('sprints.inicio < ?',
+                                               Sprint.find(params[:progress][:sprint_id])
+                                               .inicio)
+      if before_p.blank?
+        @progress.advance = params[:progress][:completeness].to_f
+      else
+        @progress.advance = params[:progress][:completeness].to_f -
+                            before_p.first.completeness.to_f
+      end
+
+      @progress.save
+
+      @project.progresses.joins(:sprint).order('sprints.inicio').each do |progress|
+        if @project.progresses.joins(:sprint).order('sprints.inicio')
+          .where('sprints.inicio < ?', progress.sprint.inicio).present?
+          progress.advance = (progress.completeness.to_f -
+                              @project.progresses.joins(:sprint)
+                              .order('sprints.inicio')
+                              .where('sprints.inicio < ?',
+                                progress.sprint.inicio).last
+                              .completeness.to_f)
+                             .round(2)
+          progress.save
+        else
+          progress.advance = progress.completeness.to_f
+          progress.save
+        end
+      end
 
       redirect_to progresses_path(project: @progress.project),
                   notice: 'Nova completude adicionada com sucesso!'
@@ -38,7 +82,7 @@ class ProgressesController < ApplicationController
     if @progress.destroy
 
       @project.progresses.each do |progress|
-        if progress.project.progresses.where('id < ?', progress.id).present?
+        if @project.progresses.where('id < ?', progress.id).present?
           progress.advance = (progress.completeness.to_f -
                               progress.project.progresses
                               .where('id < ?', progress.id).last
@@ -60,7 +104,7 @@ class ProgressesController < ApplicationController
   private
 
   def progress_params
-    params.require(:progress).permit(:completeness, :advance, :project_id, :sprint_id)
+    params.require(:progress).permit(:completeness, :project_id, :sprint_id)
   end
 
 end

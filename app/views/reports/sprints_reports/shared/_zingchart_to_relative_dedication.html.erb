@@ -1,92 +1,88 @@
 <script>
   window.onload = function() {
 
-    <% hr_users = [] %>
     <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
 
     <% if sprint.present? %>
 
-      <% Project.all.order(:description).each do |project| %>
+      <% users = User.joins(:user_profile).where.not('user_profiles.name = ?',
+                'Usuário Padrão').order("user_profiles.name") %>
 
-        zingchart.render({
-          id: "chart_<%= project.id %>",
-          data: {
-            "type": "bar",
-            "title": {
-              "text": "Dedicação Relativa"
-            },
-            "legend": {
-              "layout":"1x", //row x column
-              "position": "50% 10%",
-              "padding": "10%",
-              "adjust-layout": "true"
-            },
-            "plotarea": {
-              "margin-top": "10%",
-              "margin-bottom": "25%"
-            },
-            "plot": {
-              "value-box": {
-                "text":"%v%",
-                "angle": -90,
-                "padding-bottom": "5px"
-              }
-            },
-            "scale-x": {
-              <% labels = project.team.users.joins(:user_profile)
-                          .order("user_profiles.name")
-                          .collect { |u| u.user_profile.name } %>
-              <% labels << 'Lab.' %>
-              "labels": <%= raw labels %>,
-              "item": {
-                "font-size": "10pt",
-                "max-chars": 15,
-                "angle": -45
-              }
-            },
-            "scale-y": {
-              "values": "0:250:50",
-              "format":"%v%"
-            },
-            "series": [
-              <% w_count = 1 %>
+      zingchart.render({
+        id: "chart",
+        data: {
+          "type": "bar",
+          "title": {
+            "text": "Dedicação Relativa"
+          },
+          "legend": {
+            "layout":"1x", //row x column
+            "position": "50% 10%",
+            "padding": "10%",
+            "adjust-layout": "true"
+          },
+          "plotarea": {
+            "margin-top": "10%",
+            "margin-bottom": "25%"
+          },
+          "plot": {
+            "value-box": {
+              "text":"%v%",
+              "angle": -90,
+              "padding-bottom": "5px"
+            }
+          },
+          "scale-x": {
+            <% labels = users.collect { |u| u.user_profile.name } %>
+            <% labels << 'Lab.' %>
+            "labels": <%= raw labels %>,
+            "item": {
+              "font-size": "10pt",
+              "max-chars": 15,
+              "angle": -45
+            }
+          },
+          "scale-y": {
+            "values": "0:250:50",
+            "format":"%v%"
+          },
+          "series": [
+            <% w_count = 1 %>
 
-              <% sprint.weeks.order(:description).each do |w| %>
+            <% sprint.weeks.each do |w| %>
 
-                <% values = [] %>
+              <% values = [] %>
 
-                <% project.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
+              <% users.each do |u| %>
 
-                  <% hours_performed = 0 %>
+                <% hours_performed = 0 %>
 
-                  <% w.hours_registries.where(user_id: u.id, project_id: project.id).each do |hr| %>
+                <% w.hours_registries.where(user_id: u.id).each do |hr| %>
 
-                    <% hours_performed += hr.hours_performed %>
-
-                  <% end %>
-
-                  <% values << ((hours_performed * 100) /
-                                (w.expected_hours.to_f * 3600)
-                               ).round(1) %>
+                  <% hours_performed += hr.hours_performed %>
 
                 <% end %>
 
-                <% values = values.map { |v| v.nan? ? 0 : v } %>
+                <% values << ((hours_performed * 100) /
+                              ((w.expected_hours.to_f * 3600) *
+                                Project.joins(team:[:users]).where('users.id = ?', u.id).count)
+                             ).round(1) %>
 
-                <% values << (values.sum / values.count).round(1) %>
-
-                {
-                  "values": <%= values %>,
-                  "text": "Semana <%= w_count %>"
-                },
-
-                <% w_count += 1 %>
               <% end %>
-            ]
-          }
-        });
 
-      <% end %>
+              <% values = values.map { |v| v.nan? ? 0 : v } %>
+              <% values << (values.sum / values.count).round(1) %>
+
+              {
+                "values": <%= values %>,
+                "text": "Semana <%= w_count %>"
+              },
+
+              <% w_count += 1 %>
+            <% end %>
+          ]
+        }
+      });
 
     <% end %>
   };

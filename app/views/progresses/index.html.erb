@@ -65,7 +65,8 @@
             <% i << index %>
           <% end %>
 
-          <% @project.progresses.order(:id).each do |progress| %>
+          <% @project.progresses.joins(:sprint)
+             .order('sprints.semester, sprints.description').each do |progress| %>
             <tr>
 
               <td>

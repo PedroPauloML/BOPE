@@ -1,26 +1,23 @@
-<% Project.all.order(:description).each do |p| %>
-  <div class="chart">
-    <h1 style="color: black; font-size: 20pt; font-weight: bold; text-align: center; margin-top: 0;">
-      <%= p.description %>
-    </h1>
-    <div id="chart_<%= p.id %>"></div>
-    <p style="font-size: 8pt;text-align: justify;">
-      * Integrantes da equipe:
+<div class="chart">
+  <div id="chart"></div>
+  <p style="font-size: 8pt;text-align: justify;">
+    * Integrantes da equipe:
 
-      <% last_u = p.team.users.joins(:user_profile).order("user_profiles.name").last %>
+    <% users = User.joins(:user_profile).where.not('user_profiles.name = ?',
+                'Usuário Padrão').order("user_profiles.name") %>
+    <% last_u = users.last %>
 
-      <% p.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
+    <% users.each do |u| %>
 
-        <% unless u == last_u %>
-          <%= u.user_profile.name %>,
-        <% else %>
-          <%= u.user_profile.name %>.
-        <% end %>
-
+      <% unless u == last_u %>
+        <%= u.user_profile.name %>,
+      <% else %>
+        <%= u.user_profile.name %>.
       <% end %>
-    </p>
-  </div>
-<% end %>
+
+    <% end %>
+  </p>
+</div>
 
 <br>
 
@@ -29,7 +26,7 @@
 
 <br><br>
 
-<%= form_tag reports_sprints_reports_relative_dedication_path, method: :get, style: 'display: inline-block' do %>
+<%= form_tag reports_weeks_reports_relative_dedication_path, method: :get, style: 'display: inline-block' do %>
   <%= hidden_field_tag :format, :pdf %>
   <%= hidden_field_tag 'observation' %>
   <%= hidden_field_tag 'sprint', params[:sprint] %>

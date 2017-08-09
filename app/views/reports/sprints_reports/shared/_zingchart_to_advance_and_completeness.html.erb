@@ -27,16 +27,16 @@
             },
             "plot": {
               "value-box": {
-                "text": "%node-value"
+                "text": "%node-value%"
               }
             },
             "series": [
               {
-                "values": <%= raw project.progresses.order(:id).map { |p| [p.sprint.description, p.completeness.to_f] } %>,
+                "values": <%= raw project.progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.completeness.to_f] } %>,
                 "text": "Completude"
               },
               {
-                "values": <%= raw project.progresses.order(:id).map { |p| [p.sprint.description, p.advance.to_f] } %>,
+                "values": <%= raw project.progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.advance.to_f] } %>,
                 "text": "Avanço"
               }
             ]
