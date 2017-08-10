@@ -165,11 +165,22 @@
 
                 <% burndowns = [expected_points] %>
 
-                <% pass = (expected_points.to_f / sprint.weeks.count.to_f).round(1) %>
+                <% pass = (expected_points.to_f / (sprint.weeks.count + 1)) %>
 
-                <% while(expected_points >= 0) %>
-                  <% expected_points_for_week << expected_points %>
-                  <% expected_points = (expected_points - pass).to_i %>
+                <% while(expected_points > 0) %>
+
+                  <% if expected_points - pass > 0 %>
+
+                    <% expected_points_for_week << expected_points %>
+                    <% expected_points = expected_points - pass %>
+
+                  <% else %>
+
+                    <% expected_points_for_week << 0.0 %>
+                    <% expected_points = expected_points - pass %>
+
+                  <% end %>
+
                 <% end %>
 
                 <% expected_points_for_week = expected_points_for_week.collect { |ep| ep.round(0) } %>

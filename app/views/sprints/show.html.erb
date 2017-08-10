@@ -165,7 +165,7 @@
           <% if @activities.present? %>
 
             <!-- Ordernar pelo usuário -->
-            <% @activities.each do |activity| %>
+            <% @activities.order(:description).each do |activity| %>
 
               <% if current_user_total? %>
 
