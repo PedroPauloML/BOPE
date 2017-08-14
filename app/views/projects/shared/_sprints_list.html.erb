@@ -91,10 +91,20 @@
 </table>
 
 <% if current_user_total? %>
+
   <% if can? :create, Sprint %>
-    <%= link_to "Nova Sprint", new_sprint_path(project: @project), class: "btn btn-default" %> |
-    <%= link_to "Nova Atividade", new_activity_path(project: @project), class: "btn btn-default" %>
+
+    <%= link_to "Nova Sprint", new_sprint_path(project: @project), class: "btn btn-default" %>
+
+    <% if @project.sprints.where('(inicio < ? AND fim > ?) OR (inicio > ?)',
+                                 Time.zone.now.to_date,
+                                 Time.zone.now.to_date,
+                                 Time.zone.now.to_date).present? %>
+      | <%= link_to "Nova Atividade", new_activity_path(project: @project), class: "btn btn-default" %>
+    <% end %>
+
   <% end %>
+
 <% else %>
   <%= link_to "Nova Atividade", new_activity_path(project: @project), class: "btn btn-default" %>
 <% end %>

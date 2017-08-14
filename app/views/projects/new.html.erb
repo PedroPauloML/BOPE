@@ -56,7 +56,12 @@
 
             <div class="col-lg-6 col-lg-offset-2">
               <%= f.select("sprint_ids",
-                         Sprint.all.collect {|s| [ truncate(s.description, length: 55), s.id ] },
+                         Sprint.where('(inicio < ? AND fim > ?)
+                                      OR (inicio > ?)',
+                                      Time.zone.now.to_date,
+                                      Time.zone.now.to_date,
+                                      Time.zone.now.to_date)
+                         .collect {|s| [ truncate("#{s.description} (#{s.semester})", length: 55), s.id ] },
                          {include_blank: '-- Selecione um sprint --'},
                          {onchange: 'sprint_ids(this)', class: "form-control"}) %>
             </div>

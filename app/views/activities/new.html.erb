@@ -89,7 +89,12 @@
                   </span>
                 <% else %>
                   <%= f.select(:sprint_id,
-                          @project.sprints.order(:description).collect {|s| [ s.description, s.id ] },
+                          @project.sprints
+                          .where('(inicio < ? AND fim > ?) OR (inicio > ?)',
+                                 Time.zone.now.to_date,
+                                 Time.zone.now.to_date,
+                                 Time.zone.now.to_date)
+                          .order(:inicio).collect {|s| [ "#{s.description} (#{s.semester})", s.id ] },
                           {},
                           {class: "form-control"}) %>
                 <% end %>

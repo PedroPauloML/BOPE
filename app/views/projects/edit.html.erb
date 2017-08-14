@@ -56,9 +56,24 @@
             <div class="form-group">
               <%= hidden_field_tag  "sprint_ids[]", sprint.id %>
 
+              <% sprints_old = @project.sprints.where
+                            .not('(inicio < ? AND fim > ?) OR
+                                  (inicio > ?)',
+                               Time.zone.now.to_date,
+                               Time.zone.now.to_date,
+                               Time.zone.now.to_date).order(:inicio)
+                            .collect {|s| [ truncate("#{s.description} (#{s.semester})", length: 55), s.id ] } %>
+              <% sprints_new = Sprint.where('(inicio < ? AND fim > ?) OR
+                                          (inicio > ?)',
+                                        Time.zone.now.to_date,
+                                        Time.zone.now.to_date,
+                                        Time.zone.now.to_date).order(:inicio)
+                            .collect {|s| [ truncate("#{s.description} (#{s.semester})", length: 55), s.id ] } %>
+              <% sprints = sprints_old + sprints_new %>
+
               <div class="col-lg-6 col-lg-offset-2">
                 <%= f.select("sprint_ids[]",
-                        Sprint.all.collect {|s| [ truncate(s.description, length: 55), s.id ] },
+                        sprints,
                         {selected: sprint.id},
                         {onchange: 'sprint_ids(this)', class: 'form-control'}) %>
               </div>
