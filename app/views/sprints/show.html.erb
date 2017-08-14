@@ -65,10 +65,6 @@
 
       <span class="title">Pontos realizados:</span> <%= pontos_atualizados %><br><br>
 
-      <!-- <span class="users-weeks pull-right">
-        Semanas para:
-
-      </span> -->
       <div class="row">
         <% if current_user_total? %>
 
@@ -165,7 +161,7 @@
           <% if @activities.present? %>
 
             <!-- Ordernar pelo usuário -->
-            <% @activities.order(:description).each do |activity| %>
+            <% @activities.joins(user:[:user_profile]).order('user_profiles.name', :description).each do |activity| %>
 
               <% if current_user_total? %>
 

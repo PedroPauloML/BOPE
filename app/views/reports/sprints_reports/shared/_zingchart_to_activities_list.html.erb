@@ -43,7 +43,7 @@
             }
           },
           "scale-x-2": {
-            "values": <%= raw (sprints.collect { |w| w.description }) %>,
+            "values": <%= raw (sprints.collect { |s| "#{s.description} (#{s.semester})" }) %>,
             "placement": "default",
             "item": {
               "offsetY": -20,
@@ -54,8 +54,9 @@
             }
           },
           "scale-y": {
-            <% max_l = project.activities.group_by { |a| a.label_id }.max %>
-            "values": "0:<%= max_l.nil? ? 5 : max_l.second.count + 5 %>:5",
+            <% max_l = project.activities.group_by { |a| a.label_id } %>
+            <% max_l = max_l.max_by { |m| m.count }.second.count %>
+            "values": "0:<%= max_l.nil? ? 5 : max_l + 5 %>:5",
             "format":"%v"
           },
           "series": [
@@ -126,7 +127,7 @@
           }
         },
         "scale-x-2": {
-          "values": <%= raw (sprints.collect { |w| w.description }) %>,
+          "values": <%= raw (sprints.collect { |s| "#{s.description} (#{s.semester})" }) %>,
           "placement": "default",
           "item": {
             "offsetY": -20,
@@ -137,8 +138,9 @@
           }
         },
         "scale-y": {
-          <% max_l = Activity.all.group_by { |a| a.label_id }.max %>
-          "values": "0:<%= max_l.nil? ? 5 : max_l.second.count + 5 %>:5",
+          <% max_l = Activity.all.group_by { |a| a.label_id } %>
+          <% max_l = max_l.max_by { |m| m.count }.second.count %>
+          "values": "0:<%= max_l.nil? ? 5 : max_l + 5 %>:5",
           "format":"%v"
         },
         "series": [
