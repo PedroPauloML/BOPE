@@ -27,21 +27,19 @@ class Reports::SprintsReportsController < ReportsController
   def activities_list
     respond_to do |format|
       format.pdf do
-        render pdf: "report_#{Sprint.find(params[:sprint]).description}",
+        render pdf: "report",
                disposition: "inline",
                template: "reports/sprints_reports/activities_list.html.erb",
                orientation: 'Landscape',
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]),
-                         :@observation => params[:observation] },
+               locals: { :@observation => params[:observation] },
                page_size: 'A4',
                encoding: 'utf8'
       end
       format.html do
         render template: "reports/sprints_reports/activities_list.html.erb",
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]),
-                         :@observation => params[:observation] }
+               locals: { :@observation => params[:observation] }
        end
     end
   end

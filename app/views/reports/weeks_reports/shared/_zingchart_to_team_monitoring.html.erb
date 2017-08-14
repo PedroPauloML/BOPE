@@ -81,7 +81,7 @@
 
         <% speed = [] %>
 
-        <% weeks.each do |w| %>
+        <% weeks.order(:start_w).each do |w| %>
 
           <% b = Burndown.where(project_id: project.id, week_id: w.id).first %>
           <% b.present? ? speed << b.points_made : speed << 0 %>
@@ -105,7 +105,7 @@
             },
             "scale-x": {
               "labels": <%= raw (weeks
-                                 .order(:description)
+                                 .order(:start_w)
                                  .collect { |w| w.description }) %>
             },
             "scale-y": {
@@ -159,7 +159,7 @@
             },
             "scale-x": {
               "labels": <%= raw (["Semana 0"] +
-                                 weeks.order(:description)
+                                 weeks.order(:start_w)
                                  .collect { |w| w.description }) %>
             },
             "scale-y": {
@@ -177,22 +177,10 @@
 
                 <% burndowns = [expected_points] %>
 
-                <% pass = (expected_points.to_f / (weeks.count + 1)) %>
-
-                <% while(expected_points > 0) %>
-
-                  <% if expected_points - pass > 0 %>
-
-                    <% expected_points_for_week << expected_points %>
-                    <% expected_points = expected_points - pass %>
-
-                  <% else %>
-
-                    <% expected_points_for_week << 0.0 %>
-                    <% expected_points = expected_points - pass %>
-
-                  <% end %>
-
+                <% for week in 0..weeks.count %>
+                    <% expected_points_for_week <<
+                       expected_points - ((expected_points.to_f /
+                                           weeks.count) * week) %>
                 <% end %>
 
                 <% expected_points_for_week = expected_points_for_week.collect { |ep| ep.round(0) } %>

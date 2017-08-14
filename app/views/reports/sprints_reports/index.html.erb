@@ -86,8 +86,8 @@
       <br><br><br>
 
       <!-- .chart -->
-      <% if ((params[:sprint].present?) ||
-             (params[:report_kind].present? && params[:sprint].present?)) %>
+      <% if ((params[:report_kind].present? && params[:sprint].present?) ||
+             (params[:report_kind] == '2') || (params[:report_kind] == '5')) %>
 
         <% if params[:report_kind] == '1' %>
           <%= render partial: 'reports/sprints_reports/shared/chart_to_relative_dedication' %>
@@ -124,17 +124,20 @@
     var sprint_id = $("#sprint_id")[0];
     var report_kind = $("#report_kind")[0];
 
-    if (!sprint_id.value == "") {
+    if ((!sprint_id.value == "") || (report_kind.value == '2') ||
+        (report_kind.value == '5')) {
 
       sprint_id.removeAttribute("style");
 
-      if ((report_kind.value == '1') || (report_kind.value == '2') ||
-          (report_kind.value == '3') || (report_kind.value == '4') ||
-          (report_kind.value == '5')) {
+      if ((report_kind.value == '1') || (report_kind.value == '3') ||
+          (report_kind.value == '4')) {
 
         var url = "/reports/sprints_reports/?report_kind=" + report_kind.value + "&sprint=" + sprint_id.value;
         window.location.replace(url);
 
+      } else if ((report_kind.value == '2') || (report_kind.value == '5')) {
+        var url = "/reports/sprints_reports/?report_kind=" + report_kind.value;
+        window.location.replace(url);
       }
 
     } else {
@@ -146,6 +149,31 @@
     var input = $(element)[0];
     $('#observation')[0].value = input.value;
   }
+
+  $(document).ready(function() {
+    if (($("#report_kind")[0].selectedIndex == '1') ||
+        ($("#report_kind")[0].selectedIndex == '4')) {
+      var sprint_id = $("#sprint_id")[0];
+      sprint_id.setAttribute("disabled", "disabled");
+    }
+  });
+
+  $(function(){
+
+    $('#report_kind').bind('change', function () {
+
+      if (($("#report_kind")[0].selectedIndex == '1') ||
+          ($("#report_kind")[0].selectedIndex == '4')) {
+        var sprint_id = $("#sprint_id")[0];
+        sprint_id.setAttribute("disabled", "disabled");
+      } else {
+        var sprint_id = $("#sprint_id")[0];
+        sprint_id.removeAttribute("disabled");
+      }
+
+    });
+
+  });
 
 </script>
 

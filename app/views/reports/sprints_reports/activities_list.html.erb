@@ -1,61 +1,68 @@
-<% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
+<% projects = Project.all.order(:description) %>
 
-<% if sprint.present? %>
+<% unless projects.blank? %>
 
-  <% projects = Project.where(id: sprint.projects.ids).order(:description) %>
+  <% projects.each do |p| %>
 
-  <% unless projects.blank? %>
+    <div style="page-break-before: always;">
 
-    <% projects.each do |p| %>
+      <%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
+      <h1>Relatório de Atividades</h1>
+      <b>Desenvolvido por:</b> Lorena Souza Costa <br>
+      <b>Data:</b> <%= l(Time.zone.today) %> <br>
 
-      <div style="page-break-before: always;">
+      <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+        <%= p.description %>
+      </h1>
 
-        <%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
-        <h1>Relatório de Atividades até a <%= "#{@sprint.description} (#{@sprint.semester})" %></h1>
-        <b>Desenvolvido por:</b> Lorena Souza Costa <br>
-        <b>Data:</b> <%= l(Time.zone.today) %> <br>
+      <div id="chart_<%= p.id %>" style="width: 1000px"></div>
 
-        <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
-          <%= p.description %>
-        </h1>
+      <p style="font-size: 8pt;text-align: justify;">
+        * Integrantes da equipe:
 
-        <div id="chart_<%= p.id %>" style="width: 1000px"></div>
+        <% last_u = p.team.users
+                   .joins(:user_profile).order("user_profiles.name")
+                   .last %>
 
-        <p style="font-size: 8pt;text-align: justify;">
-          * Integrantes da equipe:
+        <% p.team.users.joins(:user_profile)
+           .order("user_profiles.name").each do |u| %>
 
-          <% last_u = p.team.users
-                     .joins(:user_profile).order("user_profiles.name")
-                     .last %>
-
-          <% p.team.users.joins(:user_profile)
-             .order("user_profiles.name").each do |u| %>
-
-            <% unless u == last_u %>
-              <%= u.user_profile.name %>,
-            <% else %>
-              <%= u.user_profile.name %>.
-            <% end %>
-
+          <% unless u == last_u %>
+            <%= u.user_profile.name %>,
+          <% else %>
+            <%= u.user_profile.name %>.
           <% end %>
-        </p>
-      </div>
-    <% end %>
-  <% else %>
-    <div class="chart">
-      <p>Nenhuma informação encontrada :'(</p><br>
+
+        <% end %>
+      </p>
     </div>
   <% end %>
 
-  <% if @observation.present? %>
-    <p style="font-size: 8pt;text-align: justify;">
-      OBS.:
-      <%= @observation %>
-    </p>
-  <% end %>
+  <div style="page-break-before: always;">
 
+    <%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
+    <h1>Relatório de Atividades</h1>
+    <b>Desenvolvido por:</b> Lorena Souza Costa <br>
+    <b>Data:</b> <%= l(Time.zone.today) %> <br>
+
+    <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+      Resultados Gerais
+    </h1>
+
+    <div id="chart_geral" style="width: 1000px"></div>
+  </div>
+<% else %>
+  <div class="chart">
+    <p>Nenhuma informação encontrada :'(</p><br>
+  </div>
 <% end %>
 
+<% if @observation.present? %>
+  <p style="font-size: 8pt;text-align: justify;">
+    OBS.:
+    <%= @observation %>
+  </p>
+<% end %>
 
 
 <%= render partial: 'reports/sprints_reports/shared/zingchart_to_activities_list' %>

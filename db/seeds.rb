@@ -56,8 +56,7 @@ puts "Gerando os STATUS..."
 status_color = [["Não iniciada", "#7c8f00"],
                 ["Em andamento", "#065e00"],
                 ["Validado", "#0009ff"],
-                ["Aguardando validação", "#616161"],
-                ["Cancelado","#b05500"]]
+                ["Aguardando validação", "#616161"]]
 
 status_color.each do |status, color|
   Status.create!(

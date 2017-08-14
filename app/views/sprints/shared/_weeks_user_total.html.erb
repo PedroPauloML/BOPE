@@ -1,4 +1,4 @@
-<% @sprint.weeks.order(:description).each do |week| %>
+<% @sprint.weeks.order(:start_w).each do |week| %>
 
   <tr <%= "class=current_period" if Time.zone.now.to_date.between?(week.start_w, week.end_w) %>>
 

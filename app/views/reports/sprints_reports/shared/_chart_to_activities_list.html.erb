@@ -1,54 +1,66 @@
-<% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
+<% projects = Project.all.order(:description) %>
 
-<% if sprint.present? %>
+<% unless projects.blank? %>
 
-  <% projects = Project.where(id: sprint.projects.ids).order(:description) %>
+  <% projects.each do |p| %>
 
-  <% unless projects.blank? %>
-
-    <% projects.each do |p| %>
-
-      <div class="chart">
-        <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
-          <%= p.description %>
-        </h1>
-
-        <div id="chart_<%= p.id %>"></div>
-
-        <p style="font-size: 8pt;text-align: justify;">
-          * Integrantes da equipe:
-
-          <% last_u = p.team.users
-                     .joins(:user_profile).order("user_profiles.name")
-                     .last %>
-
-          <% p.team.users.joins(:user_profile)
-             .order("user_profiles.name").each do |u| %>
-
-            <% unless u == last_u %>
-              <%= u.user_profile.name %>,
-            <% else %>
-              <%= u.user_profile.name %>.
-            <% end %>
-
-          <% end %>
-        </p>
-
-      </div>
-    <% end %>
-  <% else %>
     <div class="chart">
-      <p>Nenhuma informação encontrada :'(</p><br>
+      <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+        <%= p.description %>
+      </h1>
+
+      <div id="chart_<%= p.id %>"></div>
+
+      <p style="font-size: 8pt;text-align: justify;">
+        * Integrantes da equipe:
+
+        <% last_u = p.team.users
+                   .joins(:user_profile).order("user_profiles.name")
+                   .last %>
+
+        <% p.team.users.joins(:user_profile)
+           .order("user_profiles.name").each do |u| %>
+
+          <% unless u == last_u %>
+            <%= u.user_profile.name %>,
+          <% else %>
+            <%= u.user_profile.name %>.
+          <% end %>
+
+        <% end %>
+      </p>
+
     </div>
   <% end %>
+  <div class="chart">
+    <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+      Resultados Gerais
+    </h1>
+
+    <div id="chart_geral"></div>
+  </div>
+<% else %>
+  <div class="chart">
+    <p>Nenhuma informação encontrada :'(</p><br>
+  </div>
 <% end %>
 
 
 <br><br>
 
-<%= form_tag reports_sprints_reports_activities_list_path, method: :get, style: 'display: inline-block' do %>
-  <%= hidden_field_tag :format, :pdf %>
-  <%= hidden_field_tag 'sprint', params[:sprint] %>
+<button id="download_pdf" class="btn btn-default">Download PDF</button> |
 
-  <%= submit_tag "Download PDF", id: 'download_pdf', class: 'btn btn-default', target: '_blank' %> |
+<%= form_tag reports_sprints_reports_activities_list_path, id: 'activities_list_form', method: :get, target: '_blank', style: 'display: inline-block' do %>
+  <%= hidden_field_tag :format, :pdf %>
 <% end %>
+
+<script>
+  $(document).ready(function() {
+    $(function(){
+      $('#download_pdf').bind('click', function() {
+        var form = $('#activities_list_form')[0];
+        form.submit();
+      });
+    });
+  });
+</script>
