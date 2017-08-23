@@ -1,24 +1,12 @@
-# README
+## BOPE SYSTEM
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Sistema de gerenciamento de ativades para instituições educacionais.
 
-Things you may want to cover:
+## Dependências do projeto
 
-* Ruby version
+* ImageMagick (https://www.imagemagick.org)
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+sudo apt-get update
+sudo apt-get install imagemagick
+```
