@@ -1,6 +1,6 @@
 ## BOPE SYSTEM
 
-Sistema de gerenciamento de ativades para instituições educacionais.
+Sistema de gerenciamento de atividades para instituições educacionais.
 
 ## Dependências do projeto
 
