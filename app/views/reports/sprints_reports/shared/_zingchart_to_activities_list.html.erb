@@ -55,7 +55,7 @@
           },
           "scale-y": {
             <% max_l = project.activities.group_by { |a| a.label_id } %>
-            <% max_l = max_l.max_by { |m| m.count }.second.count %>
+            <% max_l.blank? ? max_l = nil : max_l = max_l.max_by { |m| m.count }.second.count %>
             "values": "0:<%= max_l.nil? ? 5 : max_l + 5 %>:5",
             "format":"%v"
           },
