@@ -3,7 +3,10 @@
 
   <div class="col-lg-6 col-lg-offset-1">
     <%= select(:team_user, 'users_id[]',
-               User.all.collect {|u| [ u.user_profile.name, u.id ] },
+               User.joins(:user_profile)
+                        .where.not('user_profiles.name = ?',
+                        'Usuário Padrão').order("user_profiles.name")
+                        .collect {|u| [ u.user_profile.name, u.id ] },
                {include_blank: '-- Selecione um usuário --'},
                {onchange: 'users_ids(this)', class: "form-control"}) %>
 
