@@ -22,9 +22,9 @@
             <% end %>
 
             <% avgs << (values /
-                        (HoursRegistry.where(project_id: project.id,
-                                             week_id: sprint.weeks.ids).count /
-                         sprint.weeks.count)) %>
+                        projects.first.team.users.joins(:user_profile)
+                        .where.not('user_profiles.name = ?', 'Usuário Padrão')
+                        .count).round(1) %>
           <% else %>
             <% avgs << 0 %>
           <% end %>
