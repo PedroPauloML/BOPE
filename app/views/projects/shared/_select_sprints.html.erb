@@ -3,7 +3,7 @@
 
   <div class="col-lg-6 col-lg-offset-2">
     <%= select(nil, "sprint_ids[]",
-               Sprint.where('(inicio < ? AND fim > ?) OR (inicio > ?)',
+               Sprint.where('(inicio <= ? AND fim >= ?) OR (inicio > ?)',
                             Time.zone.now.to_date,
                             Time.zone.now.to_date,
                             Time.zone.now.to_date)

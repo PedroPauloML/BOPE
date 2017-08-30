@@ -258,8 +258,8 @@
 
       </table>
 
-      <% if (@sprint.inicio < Time.zone.now.to_date) &&
-            (@sprint.fim > Time.zone.now.to_date) %>
+      <% if (@sprint.inicio <= Time.zone.now.to_date) &&
+            (@sprint.fim >= Time.zone.now.to_date) %>
         <%= link_to t('buttons.new'), new_activity_path(project: @project.id, sprint: @sprint.id), class: "btn btn-default" %>
       <% end %>
 

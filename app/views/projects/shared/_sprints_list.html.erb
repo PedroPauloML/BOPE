@@ -96,7 +96,7 @@
 
     <%= link_to "Nova Sprint", new_sprint_path(project: @project), class: "btn btn-default" %>
 
-    <% if @project.sprints.where('(inicio < ? AND fim > ?) OR (inicio > ?)',
+    <% if @project.sprints.where('(inicio <= ? AND fim >= ?) OR (inicio > ?)',
                                  Time.zone.now.to_date,
                                  Time.zone.now.to_date,
                                  Time.zone.now.to_date).present? %>

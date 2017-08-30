@@ -68,15 +68,17 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="col-lg-3 control-label">Acesso: </label>
-              <div class="col-lg-7">
-                <%= user_profile.select(:role,
-                                        ['Total', 'Parcial'],
-                                        {selected: @user.user_profile.role},
-                                        {class: 'form-control'}) %>
+            <% if current_user_total? %>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">Acesso: </label>
+                <div class="col-lg-7">
+                  <%= user_profile.select(:role,
+                                          ['Total', 'Parcial'],
+                                          {selected: @user.user_profile.role},
+                                          {class: 'form-control'}) %>
+                </div>
               </div>
-            </div>
+            <% end %>
 
             <div class="form-group">
               <label class="col-lg-3 control-label">Foto de perfil: </label>

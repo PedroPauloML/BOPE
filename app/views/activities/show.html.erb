@@ -65,6 +65,11 @@
 
       <br><br><br>
 
+      <% if (@activity.sprint.inicio <= Time.zone.now.to_date) &&
+            (@activity.sprint.fim >= Time.zone.now.to_date) %>
+        <%= link_to t('buttons.new'), new_activity_path(project: @activity.project.id, sprint: @activity.sprint.id), class: "btn btn-default" %> |
+      <% end %>
+
       <%= link_to t('buttons.edit'), edit_activity_path(@activity), class: "btn btn-default" %> |
 
       <%= link_to t('buttons.back'), sprint_path(@activity.sprint.id, project: @activity.project.id), class: "btn btn-default" %>

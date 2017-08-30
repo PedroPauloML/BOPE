@@ -22,7 +22,7 @@
             <% end %>
 
             <% avgs << (values /
-                        projects.first.team.users.joins(:user_profile)
+                        project.team.users.joins(:user_profile)
                         .where.not('user_profiles.name = ?', 'Usuário Padrão')
                         .count).round(1) %>
           <% else %>
