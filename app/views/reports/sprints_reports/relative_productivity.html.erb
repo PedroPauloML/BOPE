@@ -1,30 +1,36 @@
-<%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
-<h1>Relatório de Produtividade Relativa na <%= "#{@sprint.description} (#{@sprint.semester})" %></h1>
-<b>Desenvolvido por:</b> Lorena Souza Costa <br>
-<b>Data:</b> <%= l(Time.zone.today) %> <br>
 
 <% Project.all.order(:description).each do |p| %>
 
-  <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
-    <%= p.description %>
-  </h1>
-  <div id="chart_<%= p.id %>" style="width: 1000px"></div>
+  <div style="page-break-before: always;">
 
-  <p style="font-size: 8pt;text-align: justify;">
-    * Integrantes da equipe:
+    <%= wicked_pdf_image_tag 'logo_imobilis.png', style: 'float: right; height: 80px;' %>
+    <h1>Relatório de Produtividade Relativa</h1>
+    <b>Desenvolvido por:</b> Lorena Souza Costa <br>
+    <b>Data:</b> <%= l(Time.zone.today) %> <br>
 
-    <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
+    <h1 style="color: black;font-size: 20pt;font-weight: bold;text-align: center;margin-top: 0;">
+      <%= p.description %>
+    </h1>
 
-    <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+    <div id="chart_<%= p.id %>" style="width: 1000px"></div>
 
-      <% unless u == last_u %>
-        <%= u.user_profile.name %>,
-      <% else %>
-        <%= u.user_profile.name %>.
+    <p style="font-size: 8pt;text-align: justify;">
+      * Integrantes da equipe:
+
+      <% last_u = User.joins(:user_profile).order("user_profiles.name").last %>
+
+      <% User.joins(:user_profile).order("user_profiles.name").each do |u| %>
+
+        <% unless u == last_u %>
+          <%= u.user_profile.name %>,
+        <% else %>
+          <%= u.user_profile.name %>.
+        <% end %>
+
       <% end %>
+    </p>
 
-    <% end %>
-  </p>
+  </div>
 
 <% end %>
 

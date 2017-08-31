@@ -95,8 +95,7 @@ class Reports::SprintsReportsController < ReportsController
                template: "reports/sprints_reports/relative_productivity.html.erb",
                orientation: 'Landscape',
                layout: "report_pdf",
-               locals: { :@sprint => Sprint.find(params[:sprint]),
-                         :@observation => params[:observation] },
+               locals: { :@observation => params[:observation] },
                page_size: 'A4',
                encoding: 'utf8'
       end
