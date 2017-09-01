@@ -1,0 +1,31 @@
+<div class="col-lg-1 col-sm-1 col-xs-1" style="float: right">
+  <ul class="nav nav-pills pull-right">
+    <li class="dropdown">
+      <a class="dropdown-toggle btn btn-default" data-toggle="dropdown" style="padding: 0 15px">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <% ma.sub_macro_activities.each do |sma| %>
+            <li class="dropdown-submenu">
+              <a tabindex="-1" href="#">
+                <%= sma.description %>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  Completude:
+                  <%= sma.completeness.present? ? "#{sma.completeness}%" : "0%" %>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                  <%= link_to "Editar", edit_sub_macro_activity_path(sma, ma: ma.id) %>
+                </li>
+                <li>
+                  <%= link_to "Apagar", sub_macro_activity_path(sma), method: :delete %>
+                </li>
+              </ul>
+            </li>
+        <% end %>
+      </ul>
+    </li>
+  </ul>
+</div>

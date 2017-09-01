@@ -20,7 +20,6 @@
 //= require jquery.minicolors
 
 
-
 function checkIfValidated(element){
   var input = $(element)[0];
   var div = input.parentElement;
@@ -32,3 +31,4 @@ function checkIfValidated(element){
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();
 });
+

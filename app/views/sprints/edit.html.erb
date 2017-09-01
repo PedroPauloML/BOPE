@@ -79,15 +79,16 @@
     var d = new Date(value[6] + value[7] + value[8] + value[9],
                      parseInt(value[3] + value[4]) - 1,
                      value[0] + value[1]);
+    var start_d = new Date(<%= @sprint.inicio.year %>, <%= @sprint.inicio.month - 1 %>, <%= @sprint.inicio.day + 6 %>)
     var days = [0, 1, 2, 3, 4, 5, 6];
-    delete days[days.indexOf(d.getDay())]; // Excluir todos os dias menos o dia anterior
+    delete days[days.indexOf(start_d.getDay())]; // Excluir todos os dias menos o dia anterior
 
     $('#sprint_fim').datepicker('destroy');
     $('#sprint_fim').datepicker({
       todayBtn: true,
       language: "pt-BR",
       todayHighlight: true,
-      startDate: d.toLocaleDateString('pt-BR'),
+      startDate: start_d.toLocaleDateString('pt-BR'),
       daysOfWeekDisabled: days
     });
 

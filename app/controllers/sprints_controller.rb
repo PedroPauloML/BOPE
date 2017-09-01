@@ -176,6 +176,8 @@ class SprintsController < ApplicationController
    # Update the Weeks dynamically
    last_end_s = last_end
    new_end_s = @sprint.fim
+   old_weeks = Week.where('end_w > ?', new_end_s);
+   old_weeks.destroy_all
 
    while(last_end_s < new_end_s)
      difference = last_end_s.wday == 1 ? 4 : 1.week - 1.day
@@ -188,6 +190,7 @@ class SprintsController < ApplicationController
        )
      last_end_s += 1.week
    end
+
  end
 
 end

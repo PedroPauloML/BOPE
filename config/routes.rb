@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :labels, except: [:show]
   resources :statuses, except: [:show]
   resources :macro_activities, except: [:index, :show]
+  resources :sub_macro_activities, except: [:show]
   resources :progresses, except: [:show, :edit, :update]
   resources :weeks, only: [:edit, :update]
 

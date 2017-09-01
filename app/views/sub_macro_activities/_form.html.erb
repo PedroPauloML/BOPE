@@ -1,0 +1,54 @@
+<%= form_for(@sma, html: { class: 'form-horizontal' }) do |f| %>
+
+  <% if @sma.errors.any? %>
+    <div id="error_explanation">
+      <div class="alert alert-dismissible alert-danger">
+        <p>
+          <h5> Existe(m) <%= @sma.errors.count %> erro(s) no formulário:</h5>
+        </p>
+        <ul>
+          <% @sma.errors.full_messages.each do |message| %>
+              <li><h6><%= message %></h6></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <br>
+  <% end %>
+
+  <%= hidden_field_tag "ma", @macro_activity.id %>
+
+  <fieldset>
+
+    <div class="form-group">
+      <label class="col-lg-3 control-label">Descrição: </label>
+      <div class="col-lg-7">
+        <%= f.text_field :description, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-lg-3 control-label">Completude: </label>
+      <div class="col-lg-2">
+        <%= f.number_field :completeness, value: "#{@sma.completeness.nil? ? 0 : @sma.completeness}", step: 'any', class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-lg-3 control-label">Macro Atividade: </label>
+
+      <%= f.hidden_field :macro_activity_id, value: @macro_activity.id %>
+      <span style="display: block; margin-top: 9px;">
+        <%= @macro_activity.description %>
+      </span>
+    </div>
+
+    <br>
+
+    <div class="col-lg-7">
+      <%= f.submit t('buttons.save'), class: "btn btn-default" %> |
+      <%= link_to t('buttons.back'), project_path(@macro_activity.project_id), class: "btn btn-default"%>
+    </div>
+
+  </fieldset>
+<% end %>

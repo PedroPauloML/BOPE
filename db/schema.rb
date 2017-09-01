@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724203848) do
+ActiveRecord::Schema.define(version: 20170901163541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,6 +127,15 @@ ActiveRecord::Schema.define(version: 20170724203848) do
     t.index ["color_id"], name: "index_statuses_on_color_id", using: :btree
   end
 
+  create_table "sub_macro_activities", force: :cascade do |t|
+    t.string   "description"
+    t.float    "completeness"
+    t.integer  "macro_activity_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["macro_activity_id"], name: "index_sub_macro_activities_on_macro_activity_id", using: :btree
+  end
+
   create_table "team_users", force: :cascade do |t|
     t.integer  "team_id"
     t.integer  "user_id"
@@ -202,6 +211,7 @@ ActiveRecord::Schema.define(version: 20170724203848) do
   add_foreign_key "project_sprints", "sprints"
   add_foreign_key "projects", "teams"
   add_foreign_key "statuses", "colors"
+  add_foreign_key "sub_macro_activities", "macro_activities"
   add_foreign_key "team_users", "teams"
   add_foreign_key "team_users", "users"
   add_foreign_key "user_profiles", "users"
