@@ -1,20 +1,20 @@
-<% Project.all.each do |project| %>
+<% ProjectSprint.where(sprint_id: Sprint.find(params[:sprint])).each do |project_sprint| %>
   <div class="chart">
 
     <h1 style="color: black; font-size: 20pt; font-weight: bold; text-align: center; margin-top: 0;">
-      <%= project.description %>
+      <%= project_sprint.project.description %>
     </h1>
 
-    <div id="chart_<%= project.id %>"></div>
+    <div id="chart_<%= project_sprint.project_id %>"></div>
 
     <p style="font-size: 8pt;text-align: justify;">
       * Integrantes da equipe:
 
-      <% last_u = project.team.users
+      <% last_u = project_sprint.project.team.users
                  .joins(:user_profile).order("user_profiles.name")
                  .last %>
 
-      <% project.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
+      <% project_sprint.project.team.users.joins(:user_profile).order("user_profiles.name").each do |u| %>
 
         <% unless u == last_u %>
           <%= u.user_profile.name %>,

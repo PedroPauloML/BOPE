@@ -54,7 +54,7 @@
           <div class="col-lg-4 col-sm-6 col-xs-6">
             <div class="select-user">
               <%= select(:sprint, "id",
-                         Sprint.all.order(:description).collect {|s| [ "#{s.description} (#{s.semester})", s.id ] },
+                         Sprint.all.order(:semester).collect {|s| [ "#{s.description} (#{s.semester})", s.id ] },
                          {selected: "#{params[:sprint].present? ? params[:sprint] : ''}", include_blank: "-- Nome da sprint --"},
                          {class: 'form-control'}) %>
             </div>

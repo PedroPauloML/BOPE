@@ -6,10 +6,10 @@
 
     <% if sprint.present? %>
 
-      <% Project.all.order(:description).each do |project| %>
+      <% ProjectSprint.where(sprint_id: sprint.id).each do |project_sprint| %>
 
         zingchart.render({
-          id: "chart_<%= project.id %>",
+          id: "chart_<%= project_sprint.project_id %>",
           data: {
             "type": "line",
             "title": {
@@ -31,18 +31,20 @@
               }
             },
             "series": [
+              <% progresses = project_sprint.project.progresses.where('sprint_id <= ?', sprint.id) %>
               {
-                "values": <%= raw project.progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.completeness.to_f] } %>,
+                "values": <%= raw progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.completeness.to_f] } %>,
                 "text": "Completude"
               },
               {
-                "values": <%= raw project.progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.advance.to_f] } %>,
+                "values": <%= raw progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.advance.to_f] } %>,
                 "text": "Avanço"
               }
             ]
           }
         });
       <% end %>
+
     <% end %>
   };
 </script>
