@@ -170,55 +170,7 @@ end
 
     puts "Gerando as SEMANAS... [OK]"
   end
-#---------------------------------------------------#
 
-  task generate_colors: :environment do
-
-    puts "Gerando as CORES..."
-
-    colors = colors_name
-    colors.each do |color|
-      Color.create!(
-        description: color
-      )
-    end
-
-    puts "Gerando as CORES... [OK]"
-  end
-#---------------------------------------------------#
-
-  task generate_labels: :environment do
-
-    puts "Gerando os RÓTULOS..."
-
-    labels = labels_name
-
-    labels.each do |name, color|
-      Label.create!(
-        description: name,
-        color_id: Color.where(description: color).first.id
-      )
-    end
-
-    puts "Gerando os RÓTULOS... [OK]"
-  end
-#---------------------------------------------------#
-
-  task generate_statuses: :environment do
-
-    puts "Gerando os STATUS..."
-
-    status_color = status_name_color
-
-    status_color.each do |status, color|
-      Status.create!(
-        description: status,
-        color_id: Color.where(description: color).first.id
-      )
-    end
-
-    puts "Gerando os STATUS... [OK]"
-  end
 #---------------------------------------------------#
 
   task generate_activities: :environment do

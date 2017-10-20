@@ -1,8 +1,15 @@
 pt-BR:
   activerecord:
     models:
-      user: Usuário
-      team: Equipe
+      user:
+        one: Usuário
+        other: Usuários
+      team:
+        one: Equipe
+        other: Equipes
+      activity:
+        one: Atividade
+        other: Atividades
     attributes:
       user:
         name: Nome
@@ -12,4 +19,6 @@ pt-BR:
         student_number: Matrícula
         access: Acesso
       team:
+        description: Descrição
+      activity:
         description: Descrição

@@ -30,7 +30,8 @@
           <fieldset>
 
             <div class="form-group">
-              <label class="col-lg-2 control-label">Descrição: </label>
+              <!-- <label class="col-lg-2 control-label">Descrição: </label> -->
+              <%= f.label :description, class: "col-lg-2 control-label" %>
               <div class="col-lg-8">
                 <%= f.text_field :description, class: 'form-control', onfocusout: "checkIfValidated(this)" %>
               </div>

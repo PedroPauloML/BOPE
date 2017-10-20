@@ -35,7 +35,7 @@ gem 'cocoon'
 gem 'lerolero_generator'
 gem 'faker'
 gem "will_paginate", "~> 3.0.4", :require => nil
-gem 'rails-i18n', '~> 5.0.0'
+# gem 'rails-i18n', '~> 5.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.2'
