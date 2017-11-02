@@ -2,7 +2,7 @@
 
   <div class="progress progress-striped active" style="margin-bottom: 0" data-toggle="tooltip" data-placement="bottom" title="Completude do projeto">
     <div class="progress-bar" style="width: <%= @project.progresses.last.present? ? @project.progresses.last.completeness : 0 %>%">
-      <%= "#{@project.progresses.last.present? ? @project.progresses.last.completeness : 0}%" %>
+      <%= "#{@project.progresses.last.present? ? '%.1f' % @project.progresses.last.completeness : 0}%" %>
     </div>
   </div>
 
