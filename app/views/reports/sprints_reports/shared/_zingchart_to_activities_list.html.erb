@@ -2,7 +2,6 @@
   window.onload = function() {
 
     <% sprints = Sprint.all.order(:inicio) %>
-
     <% Project.all.order(:description).each do |project| %>
 
       zingchart.render({
@@ -29,7 +28,7 @@
           },
           "scale-x": {
             <% values = [] %>
-            <% sprints.count.times do %>
+            <% project.sprints.count.times do %>
               <% values << "Atv. propostas" %>
               <% values << "Atv. realizadas" %>
             <% end %>
@@ -43,7 +42,7 @@
             }
           },
           "scale-x-2": {
-            "values": <%= raw (sprints.collect { |s| "#{s.description} (#{s.semester})" }) %>,
+            "values": <%= raw (project.sprints.collect { |s| "#{s.description} (#{s.semester})" }) %>,
             "placement": "default",
             "item": {
               "offsetY": -20,
@@ -54,9 +53,15 @@
             }
           },
           "scale-y": {
-            <% max_l = project.activities.group_by { |a| a.label_id } %>
-            <% max_l.blank? ? max_l = nil : max_l = max_l.max_by { |m| m.count }.second.count %>
-            "values": "0:<%= max_l.nil? ? 5 : max_l + 5 %>:5",
+            <% labels_count = [] %>
+            <% Label.all.each do |l| %>
+              <% project.sprints.each do |s| %>
+                <% labels_count << project.activities
+                                   .where(sprint_id: s.id,label_id: l.id)
+                                   .count %>
+              <% end %>
+            <% end %>
+            "values": "0:<%= labels_count.max + 5 %>:5",
             "format":"%v"
           },
           "series": [
@@ -65,7 +70,7 @@
 
               <% datas = [] %>
 
-              <% sprints.each do |s| %>
+              <% project.sprints.each do |s| %>
                 <% count = project.activities.where(sprint_id: s.id,
                                                     label_id: l.id)
                                                     .count %>
@@ -88,7 +93,6 @@
         }
       });
     <% end %>
-
     zingchart.render({
       id: "chart_geral",
       data: {
@@ -138,12 +142,8 @@
           }
         },
         "scale-y": {
-          <% max_l = Activity.all.group_by { |a| a.label_id } %>
-          <% max_l = max_l.max_by { |m| m.count }.second.count %>
-          "values": "0:<%= max_l.nil? ? 5 : max_l + 5 %>:5",
-          "format":"%v"
-        },
-        "series": [
+          <% all_labels_count = [] %>
+          <% lab_datas = [] %>
 
           <% Label.all.each do |l| %>
 
@@ -161,9 +161,22 @@
               <% datas << count %>
               <% datas << validated %>
             <% end %>
+
+            <% datas.each do |c| %>
+              <% all_labels_count << c %>
+            <% end %>
+
+            <% lab_datas << [datas, l.description] %>
+
+          <% end %>
+          "values": "0:<%= all_labels_count.max + 5 %>:5",
+          "format":"%v"
+        },
+        "series": [
+          <% lab_datas.each do |d| %>
             {
-              "values": <%= raw(datas.to_json) %>,
-              "text": "<%= l.description %>"
+              "values": <%= raw(d[0].to_json) %>,
+              "text": "<%= d[1] %>"
             },
           <% end %>
         ]
