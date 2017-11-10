@@ -1,7 +1,7 @@
 <script>
   window.onload = function() {
 
-    <% Project.all.order(:description).each do |project| %>
+    <% Project.where(status: 'Ativo').order(:description).each do |project| %>
 
       <% relative_productivity = [] %>
 

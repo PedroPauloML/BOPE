@@ -98,8 +98,18 @@
             </div>
           </div>
 
-          <br>
+          <hr>
+          <div class="form-group">
+            <%= f.label :status, class: 'control-label col-lg-3' %>
+            <div class="col-lg-7">
+              <%= f.select('status',
+                           [['Ativo', :Ativo], ['Inativo', :Inativo]],
+                           {},
+                           {class: 'form-control'}) %>
+            </div>
+          </div>
 
+          <br>
           <div class="col-lg-7">
             <%= f.submit t('buttons.save'), class: "btn btn-default" %> |
             <%= link_to t('buttons.back'), project_path(@project), class: "btn btn-default"%>

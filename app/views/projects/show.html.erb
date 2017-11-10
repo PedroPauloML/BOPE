@@ -28,6 +28,9 @@
           <div class="pull-left">
             <span class="title">Descrição:</span> <%= @project.description %> <br>
             <span class="title">Equipe:</span> <%= @project.team.description %> <br>
+            <% if current_user.user_profile.role == 'Total' %>
+              <span class="title">Status:</span> <%= @project.status %> <br>
+            <% end %>
           </div>
         </div>
 

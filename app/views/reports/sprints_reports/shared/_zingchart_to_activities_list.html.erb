@@ -2,7 +2,7 @@
   window.onload = function() {
 
     <% sprints = Sprint.all.order(:inicio) %>
-    <% Project.all.order(:description).each do |project| %>
+    <% Project.where(status: 'Ativo').order(:description).each do |project| %>
 
       zingchart.render({
         id: "chart_<%= project.id %>",
@@ -150,14 +150,14 @@
             <% datas = [] %>
 
             <% sprints.each do |s| %>
-              <% count = Activity.where(sprint_id: s.id, label_id: l.id).count %>
-              <% validated = Activity.where(
+              <% count = Activity.joins(:project).where(sprint_id: s.id, label_id: l.id).where('projects.status = ?', 1).count %>
+              <% validated = Activity.joins(:project).where(
                                sprint_id: s.id,
                                label_id: l.id,
                                status_id: Status.where(
                                             description: 'Validado'
                                           ).first.id
-                               ).count %>
+                               ).where('projects.status = ?', 1).count %>
               <% datas << count %>
               <% datas << validated %>
             <% end %>

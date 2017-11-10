@@ -1,4 +1,4 @@
-<% projects = Project.all.order(:description) %>
+<% projects = Project.where(status: 'Ativo').order(:description) %>
 
 <% unless projects.blank? %>
 

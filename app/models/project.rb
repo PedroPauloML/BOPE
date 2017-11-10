@@ -1,5 +1,7 @@
 class Project < ApplicationRecord
 
+  enum status: { :Inativo => 0, :Ativo => 1 }
+
   # Associations
   belongs_to :team
 

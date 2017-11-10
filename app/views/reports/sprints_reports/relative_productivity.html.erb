@@ -1,5 +1,5 @@
 
-<% Project.all.order(:description).each do |p| %>
+<% Project.where(status: 'Ativo').order(:description).each do |p| %>
 
   <div style="page-break-before: always;">
 

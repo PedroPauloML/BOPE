@@ -114,7 +114,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.require(:project).permit(:id, :description, :team_id,
+    params.require(:project).permit(:id, :description, :team_id, :status,
                                     progresses_attributes:
                                     [:id, :completeness, :advance,
                                      :_destroy])
